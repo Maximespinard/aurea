@@ -1,4 +1,4 @@
-import Container from '@/components/shared/Container';
+import Container from '@/components/ui/Container';
 import { Link } from 'react-router';
 
 export default function Footer() {

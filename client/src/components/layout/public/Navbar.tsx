@@ -1,6 +1,7 @@
 import { NavLink, useLocation } from 'react-router';
 import { NAVBAR_HEIGHT } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
+import Container from '@/components/ui/Container';
 
 const Navbar = () => {
   const location = useLocation();
@@ -8,9 +9,9 @@ const Navbar = () => {
 
   return (
     <header
-      className={`fixed w-full back border-b bg-background px-4 md:px-8 h-[${NAVBAR_HEIGHT}px]`}
+      className={`fixed w-full back border-b bg-background  h-[${NAVBAR_HEIGHT}px]`}
     >
-      <div className="mx-auto h-full flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <Container className="mx-auto h-full flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <NavLink
           to="/"
           className="text-2xl font-semibold tracking-tight text-primary"
@@ -24,7 +25,7 @@ const Navbar = () => {
             </NavLink>
           )}
         </nav>
-      </div>
+      </Container>
     </header>
   );
 };
