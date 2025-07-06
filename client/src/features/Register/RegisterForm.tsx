@@ -1,14 +1,26 @@
 import { NavLink } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useRegisterForm } from './useRegisterForm';
+import type { RegisterFormValues } from './register.schema';
 
 const RegisterForm = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitted },
+  } = useRegisterForm();
+
+  const handleRegister = (values: RegisterFormValues) => {
+    console.log(values);
+  };
+
   return (
     <div className="max-w-md mx-auto py-16">
       <h1 className="text-3xl font-bold mb-6 text-center text-primary">
         Create Account
       </h1>
-      <form className="space-y-6">
+      <form className="space-y-6" onSubmit={handleSubmit(handleRegister)}>
         <div className="space-y-2">
           <label
             htmlFor="username"
@@ -16,7 +28,15 @@ const RegisterForm = () => {
           >
             Username
           </label>
-          <Input id="username" type="text" placeholder="yourname" />
+          <Input
+            {...register('username')}
+            id="username"
+            type="text"
+            placeholder="yourname"
+          />
+          {errors?.username?.message && (
+            <p className="text-destructive">{errors.username.message}</p>
+          )}
         </div>
         <div className="space-y-2">
           <label
@@ -25,7 +45,15 @@ const RegisterForm = () => {
           >
             Email
           </label>
-          <Input id="email" type="email" placeholder="you@example.com" />
+          <Input
+            {...register('email')}
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+          />
+          {errors?.email?.message && (
+            <p className="text-destructive">{errors.email.message}</p>
+          )}
         </div>
         <div className="space-y-2">
           <label
@@ -34,7 +62,15 @@ const RegisterForm = () => {
           >
             Password
           </label>
-          <Input id="password" type="password" placeholder="••••••••" />
+          <Input
+            {...register('password')}
+            id="password"
+            type="password"
+            placeholder="••••••••"
+          />
+          {errors?.password?.message && (
+            <p className="text-destructive">{errors.password.message}</p>
+          )}
         </div>
         <div className="space-y-2">
           <label
@@ -43,9 +79,19 @@ const RegisterForm = () => {
           >
             Confirm Password
           </label>
-          <Input id="confirm" type="password" placeholder="••••••••" />
+          <Input
+            {...register('confirmPassword')}
+            id="confirm"
+            type="password"
+            placeholder="••••••••"
+          />
+          {errors?.confirmPassword?.message && (
+            <p className="text-destructive">{errors.confirmPassword.message}</p>
+          )}
         </div>
-        <Button className="w-full mt-4">Create Account</Button>
+        <Button className="w-full mt-4" disabled={isSubmitted}>
+          Create Account
+        </Button>
         <p className="mt-4 text-center text-sm text-muted-foreground">
           Already have an account?{' '}
           <NavLink
