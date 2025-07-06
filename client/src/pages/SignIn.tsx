@@ -1,4 +1,6 @@
+import SignInForm from '@/features/SignIn/SignInForm';
+
 const SignIn = () => {
-  return <div>SignIn</div>;
+  return <SignInForm />;
 };
 export default SignIn;
