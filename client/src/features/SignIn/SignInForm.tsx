@@ -1,14 +1,26 @@
 import { NavLink } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useSignInForm } from './useSignInForm';
+import type { SignInFormValues } from './signIn.schema';
 
 const SignInForm = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useSignInForm();
+
+  const handleSignIn = (values: SignInFormValues) => {
+    console.log('values:', values);
+  };
+
   return (
     <div className="max-w-md mx-auto py-16">
       <h1 className="text-3xl font-bold mb-6 text-center text-primary">
         Sign In
       </h1>
-      <form className="space-y-6">
+      <form className="space-y-6" onSubmit={handleSubmit(handleSignIn)}>
         <div className="space-y-2">
           <label
             htmlFor="email"
@@ -16,7 +28,15 @@ const SignInForm = () => {
           >
             Email
           </label>
-          <Input id="email" type="email" placeholder="you@example.com" />
+          <Input
+            {...register('email')}
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+          />
+          {errors?.email?.message && (
+            <p className="text-destructive">{errors.email.message}</p>
+          )}
         </div>
         <div className="space-y-2">
           <label
@@ -25,9 +45,19 @@ const SignInForm = () => {
           >
             Password
           </label>
-          <Input id="password" type="password" placeholder="••••••••" />
+          <Input
+            {...register('password')}
+            id="password"
+            type="password"
+            placeholder="••••••••"
+          />
         </div>
-        <Button className="w-full mt-4">Sign In</Button>
+        {errors?.password?.message && (
+          <p className="text-destructive">{errors.password.message}</p>
+        )}
+        <Button className="w-full mt-4" disabled={isSubmitting}>
+          Sign In
+        </Button>
         <p className="mt-4 text-center text-sm text-muted-foreground">
           Don’t have an account?{' '}
           <NavLink
