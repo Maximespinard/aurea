@@ -8,7 +8,7 @@ export default function PublicLayout() {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className={`pt-[${NAVBAR_HEIGHT}px] flex-1`}>
+      <main className={`pt-[${NAVBAR_HEIGHT}px] flex-1 mt-25`}>
         {/* Add padding to account for fixed navbar height */}
         <Container>
           <Outlet />
