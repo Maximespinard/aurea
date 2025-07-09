@@ -27,7 +27,6 @@ interface ProfileState {
   setLoading: (isLoading: boolean) => void;
   setError: (error: string | null) => void;
   setProfileExists: (exists: boolean) => void;
-  clearProfile: () => void;
 }
 
 export const useProfileStore = create<ProfileState>((set) => ({
@@ -39,9 +38,4 @@ export const useProfileStore = create<ProfileState>((set) => ({
   setLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error }),
   setProfileExists: (exists) => set({ profileExists: exists }),
-  clearProfile: () => set({ 
-    profile: null, 
-    error: null, 
-    profileExists: false 
-  }),
 }));

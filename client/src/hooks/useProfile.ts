@@ -89,24 +89,3 @@ export const useUpdateProfile = () => {
     },
   });
 };
-
-export const useDeleteProfile = () => {
-  const queryClient = useQueryClient();
-  const { clearProfile } = useProfileStore();
-
-  return useMutation({
-    mutationFn: profileApi.deleteProfile,
-    onSuccess: () => {
-      clearProfile();
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
-      queryClient.invalidateQueries({ queryKey: ['profile-exists'] });
-      toast.success('Profile deleted successfully!');
-    },
-    onError: (error) => {
-      const message =
-        (error as ApiError).response?.data?.message ||
-        'Failed to delete profile';
-      toast.error(message);
-    },
-  });
-};

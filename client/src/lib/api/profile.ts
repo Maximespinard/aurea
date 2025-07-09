@@ -45,10 +45,6 @@ export const profileApi = {
     return data;
   },
 
-  deleteProfile: async (): Promise<void> => {
-    await api.delete('/profile');
-  },
-
   checkProfileExists: async (): Promise<{ exists: boolean }> => {
     const { data } = await api.get('/profile/exists');
     return data;

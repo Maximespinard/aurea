@@ -4,7 +4,6 @@ import {
   Post,
   Body,
   Put,
-  Delete,
   UseGuards,
   Request,
   HttpStatus,
@@ -43,13 +42,6 @@ export class ProfileController {
   ) {
     const userId = req.user.sub;
     return this.profileService.update(userId, updateProfileDto);
-  }
-
-  @Delete()
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Request() req: AuthenticatedRequest) {
-    const userId = req.user.sub;
-    return this.profileService.remove(userId);
   }
 
   @Get('exists')

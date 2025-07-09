@@ -135,29 +135,6 @@ export class ProfileService {
     }
   }
 
-  async remove(userId: string): Promise<{ message: string }> {
-    try {
-      const profile = await this.prisma.profile.findUnique({
-        where: { userId },
-      });
-
-      if (!profile) {
-        throw new NotFoundException('Profile not found');
-      }
-
-      await this.prisma.profile.delete({
-        where: { userId },
-      });
-
-      return { message: 'Profile deleted successfully' };
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new Error('Failed to delete profile');
-    }
-  }
-
   async checkProfileExists(userId: string): Promise<boolean> {
     const profile = await this.prisma.profile.findUnique({
       where: { userId },
