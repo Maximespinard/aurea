@@ -36,4 +36,41 @@ model Profile {
   notes           String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+  cycles          Cycle[]
+}
+
+model Cycle {
+  id            String    @id @default(cuid())
+  profileId     String
+  profile       Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  startDate     DateTime
+  endDate       DateTime?
+  isActive      Boolean   @default(false) // currently ongoing period
+  notes         String?
+  symptoms      String[]  // symptoms for this specific cycle
+  flow          String?   // light, medium, heavy
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  dayEntries    DayEntry[]
+
+  @@index([profileId])
+  @@index([startDate])
+}
+
+model DayEntry {
+  id          String    @id @default(cuid())
+  cycleId     String
+  cycle       Cycle     @relation(fields: [cycleId], references: [id], onDelete: Cascade)
+  date        DateTime
+  symptoms    String[]  // daily symptoms
+  mood        String?   // happy, sad, anxious, etc.
+  notes       String?
+  flow        String?   // none, light, medium, heavy
+  temperature Float?    // basal body temperature
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([cycleId, date])
+  @@index([cycleId])
+  @@index([date])
 }
