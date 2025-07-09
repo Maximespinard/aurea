@@ -4,6 +4,7 @@ import SignIn from './pages/SignIn';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import PublicLayout from './components/layout/public/PublicLayout';
+import DashboardLayout from './components/layout/dashboard/DashboardLayout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
@@ -19,10 +20,14 @@ function App() {
           path="/dashboard" 
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <DashboardLayout />
             </ProtectedRoute>
-          } 
-        />
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="calendar" element={<div>Calendar Page</div>} />
+          <Route path="profile" element={<div>Profile Page</div>} />
+        </Route>
       </Routes>
     </>
   );
