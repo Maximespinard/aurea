@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { profileApi } from '@/lib/api/profile';
-import { useProfileStore } from '@/store/profileStore';
+import { useProfileStore } from '@/stores/profileStore';
 import { toast } from 'react-hot-toast';
 import type { ApiError } from '@/types/api';
 
@@ -62,7 +62,9 @@ export const useCreateProfile = () => {
       toast.success('Profile created successfully!');
     },
     onError: (error) => {
-      const message = (error as ApiError).response?.data?.message || 'Failed to create profile';
+      const message =
+        (error as ApiError).response?.data?.message ||
+        'Failed to create profile';
       toast.error(message);
     },
   });
@@ -80,7 +82,9 @@ export const useUpdateProfile = () => {
       toast.success('Profile updated successfully!');
     },
     onError: (error) => {
-      const message = (error as ApiError).response?.data?.message || 'Failed to update profile';
+      const message =
+        (error as ApiError).response?.data?.message ||
+        'Failed to update profile';
       toast.error(message);
     },
   });
@@ -99,7 +103,9 @@ export const useDeleteProfile = () => {
       toast.success('Profile deleted successfully!');
     },
     onError: (error) => {
-      const message = (error as ApiError).response?.data?.message || 'Failed to delete profile';
+      const message =
+        (error as ApiError).response?.data?.message ||
+        'Failed to delete profile';
       toast.error(message);
     },
   });

@@ -1,8 +1,12 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { profileFormSchema, type ProfileFormValues } from './profile.schema';
-import { useProfile, useUpdateProfile, useCreateProfile } from '@/hooks/useProfile';
-import { useProfileStore } from '@/store/profileStore';
+import {
+  useProfile,
+  useUpdateProfile,
+  useCreateProfile,
+} from '@/hooks/useProfile';
+import { useProfileStore } from '@/stores/profileStore';
 
 export const useProfileForm = () => {
   const { data: profile } = useProfile();
@@ -12,7 +16,9 @@ export const useProfileForm = () => {
 
   // Convert profile data to form values
   const defaultValues: ProfileFormValues = {
-    lastPeriodDate: profile?.lastPeriodDate ? new Date(profile.lastPeriodDate) : null,
+    lastPeriodDate: profile?.lastPeriodDate
+      ? new Date(profile.lastPeriodDate)
+      : null,
     cycleLength: profile?.cycleLength || 28,
     periodDuration: profile?.periodDuration || 5,
     contraception: profile?.contraception || '',
@@ -43,7 +49,8 @@ export const useProfileForm = () => {
   return {
     form,
     onSubmit,
-    isLoading: updateProfileMutation.isPending || createProfileMutation.isPending,
+    isLoading:
+      updateProfileMutation.isPending || createProfileMutation.isPending,
     profileExists,
   };
 };

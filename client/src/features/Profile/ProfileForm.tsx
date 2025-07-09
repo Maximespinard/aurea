@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -7,26 +7,26 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { Calendar } from "@/components/ui/calendar";
+} from '@/components/ui/select';
+import { CalendarIcon } from 'lucide-react';
+import { format } from 'date-fns';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { useProfileForm } from "./useProfileForm";
+} from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import { useProfileForm } from './useProfileForm';
 
 const ProfileForm = () => {
   const { form, onSubmit, isLoading, profileExists } = useProfileForm();
@@ -44,14 +44,14 @@ const ProfileForm = () => {
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
-                      variant={"outline"}
+                      variant={'outline'}
                       className={cn(
-                        "w-full pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
+                        'w-full pl-3 text-left font-normal',
+                        !field.value && 'text-muted-foreground'
                       )}
                     >
                       {field.value ? (
-                        format(field.value, "PPP")
+                        format(field.value, 'PPP')
                       ) : (
                         <span>Pick a date</span>
                       )}
@@ -64,7 +64,7 @@ const ProfileForm = () => {
                     mode="single"
                     selected={field.value || undefined}
                     onSelect={field.onChange}
-                    initialFocus
+                    disabled={(date) => date > new Date()}
                   />
                 </PopoverContent>
               </Popover>
@@ -89,6 +89,7 @@ const ProfileForm = () => {
                     placeholder="28"
                     {...field}
                     onChange={(e) => field.onChange(parseInt(e.target.value))}
+                    min={0}
                   />
                 </FormControl>
                 <FormDescription>
@@ -111,6 +112,7 @@ const ProfileForm = () => {
                     placeholder="5"
                     {...field}
                     onChange={(e) => field.onChange(parseInt(e.target.value))}
+                    min={0}
                   />
                 </FormControl>
                 <FormDescription>
@@ -135,7 +137,7 @@ const ProfileForm = () => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="">None</SelectItem>
+                  <SelectItem value="none">None</SelectItem>
                   <SelectItem value="pill">Birth Control Pill</SelectItem>
                   <SelectItem value="iud">IUD</SelectItem>
                   <SelectItem value="implant">Implant</SelectItem>
@@ -174,7 +176,11 @@ const ProfileForm = () => {
         />
 
         <Button type="submit" disabled={isLoading}>
-          {isLoading ? "Saving..." : profileExists ? "Save Changes" : "Create Profile"}
+          {isLoading
+            ? 'Saving...'
+            : profileExists
+            ? 'Save Changes'
+            : 'Create Profile'}
         </Button>
       </form>
     </Form>
