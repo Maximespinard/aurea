@@ -3,6 +3,8 @@ import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import Calendar from './pages/Calendar';
+import Profile from './pages/Profile';
 import PublicLayout from './components/layout/public/PublicLayout';
 import DashboardLayout from './components/layout/dashboard/DashboardLayout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -25,8 +27,8 @@ function App() {
           }
         >
           <Route index element={<Dashboard />} />
-          <Route path="calendar" element={<div>Calendar Page</div>} />
-          <Route path="profile" element={<div>Profile Page</div>} />
+          <Route path="calendar" element={<Calendar />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
       </Routes>
     </>

@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { authService } from '@/services/auth.service';
 import { handleAuthError } from '@/lib/error-utils';
 import { useAuthStore } from '@/stores/authStore';
+import { profileApi } from '@/lib/api/profile';
 
 export const useLoginMutation = () => {
   const navigate = useNavigate();
@@ -11,13 +12,29 @@ export const useLoginMutation = () => {
 
   return useMutation({
     mutationFn: authService.login,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       // Update Zustand store with user data and token
       setAuth(data.user, data.access_token);
-      // Show success toast
-      toast.success('Welcome back to Auréa!');
-      // Navigate to dashboard
-      navigate('/dashboard');
+      
+      try {
+        // Check if user has a profile
+        const { exists } = await profileApi.checkProfileExists();
+        
+        if (exists) {
+          // User has a profile, go to dashboard
+          toast.success('Welcome back to Auréa!');
+          navigate('/dashboard');
+        } else {
+          // User needs to set up profile
+          toast.success('Welcome! Please set up your profile.');
+          navigate('/dashboard/profile');
+        }
+      } catch (error) {
+        // If profile check fails, go to dashboard anyway
+        console.error('Failed to check profile:', error);
+        toast.success('Welcome back to Auréa!');
+        navigate('/dashboard');
+      }
     },
     onError: (error: unknown) => {
       console.error('Login failed:', error);
