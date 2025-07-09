@@ -43,6 +43,13 @@ export class CycleController {
     return this.cycleService.findAll(profile.id);
   }
 
+  // Predictions Endpoint
+  @Get('predictions')
+  async getPredictions(@Request() req: AuthenticatedRequest) {
+    const profile = await this.getProfile(req.user.sub);
+    return this.cycleService.calculatePredictions(profile.id);
+  }
+
   @Get(':id')
   async findOne(@Request() req: AuthenticatedRequest, @Param('id') id: string) {
     const profile = await this.getProfile(req.user.sub);
@@ -97,13 +104,6 @@ export class CycleController {
   ) {
     const profile = await this.getProfile(req.user.sub);
     await this.cycleService.removeDayEntry(cycleId, date, profile.id);
-  }
-
-  // Predictions Endpoint
-  @Get('predictions')
-  async getPredictions(@Request() req: AuthenticatedRequest) {
-    const profile = await this.getProfile(req.user.sub);
-    return this.cycleService.calculatePredictions(profile.id);
   }
 
   // Helper method to get profile
