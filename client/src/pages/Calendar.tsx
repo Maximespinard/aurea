@@ -1,19 +1,25 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, Droplets, Heart, Activity, Plus, Loader2 } from "lucide-react";
+import { CalendarIcon, Droplets, Heart, Activity, Plus, Loader2, Edit } from "lucide-react";
 import { format, addDays, isSameDay, isAfter } from "date-fns";
 import { useCycles } from "@/hooks/useCycle";
 import { useProfile } from "@/hooks/useProfile";
 import { useCycleStore } from "@/stores/cycleStore";
+import { StartCycleModal } from "@/features/Cycle/StartCycleModal";
+import { EndCycleButton } from "@/features/Cycle/EndCycleButton";
+import { DayEntryModal } from "@/features/Cycle/DayEntryModal";
 import type { Cycle, DayEntry } from "@/lib/api/cycle";
 
 export default function Calendar() {
-  const { selectedDate, setSelectedDate, setActiveCycle } = useCycleStore();
+  const { selectedDate, setSelectedDate, setActiveCycle, getActiveCycleDay } = useCycleStore();
   const { data: cycles = [], isLoading: cyclesLoading } = useCycles();
   const { data: profile, isLoading: profileLoading } = useProfile();
+  
+  const [showStartModal, setShowStartModal] = useState(false);
+  const [showDayEntryModal, setShowDayEntryModal] = useState(false);
 
   const isLoading = cyclesLoading || profileLoading;
 
@@ -120,12 +126,20 @@ export default function Calendar() {
             Track your menstrual cycle and symptoms
           </p>
         </div>
-        {!activeCycle && (
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Start Period
-          </Button>
-        )}
+        <div className="flex gap-2">
+          {!activeCycle && (
+            <Button onClick={() => setShowStartModal(true)}>
+              <Plus className="mr-2 h-4 w-4" />
+              Start Period
+            </Button>
+          )}
+          {activeCycle && (
+            <EndCycleButton
+              cycleStartDate={activeCycle.startDate}
+              currentDay={getActiveCycleDay(new Date()) || 1}
+            />
+          )}
+        </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-[1fr_300px]">
@@ -217,7 +231,7 @@ export default function Calendar() {
               {activeCycle && (
                 <div className="pt-2 border-t">
                   <p className="text-sm font-medium text-destructive">
-                    Active period (Day {useCycleStore.getState().getActiveCycleDay(new Date())})
+                    Active period (Day {getActiveCycleDay(new Date())})
                   </p>
                 </div>
               )}
@@ -226,8 +240,18 @@ export default function Calendar() {
 
           {selectedDate && (
             <Card>
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>{format(selectedDate, "MMMM d, yyyy")}</CardTitle>
+                {cycles.length > 0 && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setShowDayEntryModal(true)}
+                  >
+                    <Edit className="mr-1 h-3 w-3" />
+                    {getDayEntry(selectedDate) ? 'Edit' : 'Add'} Entry
+                  </Button>
+                )}
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
@@ -297,6 +321,32 @@ export default function Calendar() {
           )}
         </div>
       </div>
+
+      <StartCycleModal 
+        open={showStartModal} 
+        onOpenChange={setShowStartModal} 
+      />
+
+      {selectedDate && cycles.length > 0 && (
+        <DayEntryModal
+          open={showDayEntryModal}
+          onOpenChange={setShowDayEntryModal}
+          date={selectedDate}
+          cycleId={(() => {
+            // Find the cycle that contains this date
+            for (const cycle of cycles) {
+              const startDate = new Date(cycle.startDate);
+              const endDate = cycle.endDate ? new Date(cycle.endDate) : new Date();
+              if (selectedDate >= startDate && selectedDate <= endDate) {
+                return cycle.id;
+              }
+            }
+            // If no cycle contains this date, use the active cycle if available
+            return activeCycle?.id || cycles[0]?.id || '';
+          })()}
+          existingEntry={getDayEntry(selectedDate)}
+        />
+      )}
     </div>
   );
 }
