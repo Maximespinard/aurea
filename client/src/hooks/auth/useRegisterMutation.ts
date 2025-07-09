@@ -9,13 +9,13 @@ export const useRegisterMutation = () => {
 
   return useMutation({
     mutationFn: authService.register,
-    onSuccess: (data) => {
-      // Store the access token
-      localStorage.setItem('access_token', data.access_token);
+    onSuccess: () => {
       // Show success toast
-      toast.success('Account created successfully! Welcome to Auréa.');
-      // Navigate to home page
-      navigate('/');
+      toast.success(
+        'Account created successfully! Please sign in to continue.'
+      );
+      // Navigate to signin page
+      navigate('/signin');
     },
     onError: (error: unknown) => {
       console.error('Registration failed:', error);
