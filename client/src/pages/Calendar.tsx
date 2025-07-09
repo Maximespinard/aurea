@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon, Droplets, Heart, Activity, Plus, Loader2, Edit } from "lucide-react";
 import { format, addDays, isSameDay, isAfter } from "date-fns";
-import { useCycles } from "@/hooks/useCycle";
+import { useCycles, useCyclePredictions } from "@/hooks/useCycle";
 import { useProfile } from "@/hooks/useProfile";
 import { useCycleStore } from "@/stores/cycleStore";
 import { StartCycleModal } from "@/features/Cycle/StartCycleModal";
@@ -17,11 +17,12 @@ export default function Calendar() {
   const { selectedDate, setSelectedDate, setActiveCycle, getActiveCycleDay } = useCycleStore();
   const { data: cycles = [], isLoading: cyclesLoading } = useCycles();
   const { data: profile, isLoading: profileLoading } = useProfile();
+  const { data: predictions, isLoading: predictionsLoading } = useCyclePredictions();
   
   const [showStartModal, setShowStartModal] = useState(false);
   const [showDayEntryModal, setShowDayEntryModal] = useState(false);
 
-  const isLoading = cyclesLoading || profileLoading;
+  const isLoading = cyclesLoading || profileLoading || predictionsLoading;
 
   // Find active cycle and set it in store
   const activeCycle = useMemo(() => {
@@ -49,40 +50,39 @@ export default function Calendar() {
     return days;
   }, [cycles]);
 
-  // Calculate next period prediction based on profile data
+  // Use backend predictions if available, fallback to simple calculation
   const nextPeriodPrediction = useMemo(() => {
-    if (!profile?.lastPeriodDate || !profile?.cycleLength) return null;
-    
-    // If there's an active cycle, use its start date
-    const lastPeriodStart = activeCycle
-      ? new Date(activeCycle.startDate)
-      : new Date(profile.lastPeriodDate);
-    
-    return addDays(lastPeriodStart, profile.cycleLength);
-  }, [profile, activeCycle]);
+    if (predictions?.nextPeriodDate) {
+      return new Date(predictions.nextPeriodDate);
+    }
+    return null;
+  }, [predictions]);
 
   // Calculate predicted period days
   const nextPeriodDays = useMemo(() => {
-    if (!nextPeriodPrediction || !profile?.periodDuration) return [];
+    if (!nextPeriodPrediction || !predictions?.averagePeriodDuration) return [];
     
-    return Array.from({ length: profile.periodDuration }, (_, i) =>
+    return Array.from({ length: predictions.averagePeriodDuration }, (_, i) =>
       addDays(nextPeriodPrediction, i)
     );
-  }, [nextPeriodPrediction, profile?.periodDuration]);
+  }, [nextPeriodPrediction, predictions]);
 
-  // Calculate fertile window (approximately days 10-15 of cycle)
+  // Use backend fertile window predictions
   const fertileDays = useMemo(() => {
-    if (!activeCycle && !profile?.lastPeriodDate) return [];
+    if (!predictions?.fertileWindowStart || !predictions?.fertileWindowEnd) return [];
     
-    const lastPeriodStart = activeCycle
-      ? new Date(activeCycle.startDate)
-      : new Date(profile!.lastPeriodDate!);
+    const fertileStart = new Date(predictions.fertileWindowStart);
+    const fertileEnd = new Date(predictions.fertileWindowEnd);
+    const days: Date[] = [];
     
-    const fertileStart = addDays(lastPeriodStart, 10);
-    return Array.from({ length: 6 }, (_, i) =>
-      addDays(fertileStart, i)
-    );
-  }, [activeCycle, profile]);
+    let currentDate = new Date(fertileStart);
+    while (currentDate <= fertileEnd) {
+      days.push(new Date(currentDate));
+      currentDate = addDays(currentDate, 1);
+    }
+    
+    return days;
+  }, [predictions]);
 
   const isDayInPeriod = (day: Date) => {
     return periodDays.some(periodDay => isSameDay(periodDay, day));
@@ -213,13 +213,13 @@ export default function Calendar() {
               <div className="flex justify-between items-center">
                 <span className="text-sm text-muted-foreground">Cycle Length</span>
                 <span className="font-medium">
-                  {profile?.cycleLength ? `${profile.cycleLength} days` : '-'}
+                  {predictions?.averageCycleLength ? `${predictions.averageCycleLength} days` : profile?.cycleLength ? `${profile.cycleLength} days` : '-'}
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-muted-foreground">Period Duration</span>
                 <span className="font-medium">
-                  {profile?.periodDuration ? `${profile.periodDuration} days` : '-'}
+                  {predictions?.averagePeriodDuration ? `${predictions.averagePeriodDuration} days` : profile?.periodDuration ? `${profile.periodDuration} days` : '-'}
                 </span>
               </div>
               <div className="flex justify-between items-center">
@@ -228,6 +228,11 @@ export default function Calendar() {
                   {nextPeriodPrediction ? format(nextPeriodPrediction, "MMM d") : '-'}
                 </span>
               </div>
+              {predictions && cycles.filter(c => c.endDate).length >= 2 && (
+                <div className="text-xs text-muted-foreground text-center pt-2">
+                  Based on {cycles.filter(c => c.endDate).length} previous cycles
+                </div>
+              )}
               {activeCycle && (
                 <div className="pt-2 border-t">
                   <p className="text-sm font-medium text-destructive">

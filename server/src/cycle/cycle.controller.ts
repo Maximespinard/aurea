@@ -105,6 +105,13 @@ export class CycleController {
     await this.cycleService.removeDayEntry(cycleId, date, profile.id);
   }
 
+  // Predictions Endpoint
+  @Get('predictions')
+  async getPredictions(@Request() req: AuthenticatedRequest) {
+    const profile = await this.getProfile(req.user.sub);
+    return this.cycleService.calculatePredictions(profile.id);
+  }
+
   // Helper method to get profile
   private async getProfile(userId: string) {
     const profile = await this.prisma.profile.findUnique({

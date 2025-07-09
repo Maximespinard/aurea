@@ -121,7 +121,7 @@ export class CycleService {
       throw new NotFoundException('No active cycle found');
     }
 
-    return this.prisma.cycle.update({
+    const updatedCycle = await this.prisma.cycle.update({
       where: { id: activeCycle.id },
       data: {
         endDate: new Date(),
@@ -131,6 +131,11 @@ export class CycleService {
         dayEntries: true,
       },
     });
+
+    // Update profile averages after ending a cycle
+    await this.updateProfileAverages(profileId);
+
+    return updatedCycle;
   }
 
   async remove(id: string, profileId: string): Promise<{ message: string }> {
@@ -214,5 +219,114 @@ export class CycleService {
     });
 
     return { message: 'Day entry deleted successfully' };
+  }
+
+  // Prediction Methods
+  async calculatePredictions(profileId: string) {
+    // Get all completed cycles for this profile
+    const cycles = await this.prisma.cycle.findMany({
+      where: {
+        profileId,
+        endDate: { not: null },
+      },
+      orderBy: { startDate: 'desc' },
+      take: 6, // Use last 6 cycles for better average
+    });
+
+    // Get profile for default values
+    const profile = await this.prisma.profile.findUnique({
+      where: { id: profileId },
+    });
+
+    if (!profile) {
+      throw new NotFoundException('Profile not found');
+    }
+
+    // Calculate average cycle length
+    let averageCycleLength = profile.cycleLength || 28;
+    if (cycles.length >= 2) {
+      const cycleLengths: number[] = [];
+      for (let i = 0; i < cycles.length - 1; i++) {
+        const currentStart = new Date(cycles[i].startDate);
+        const nextStart = new Date(cycles[i + 1].startDate);
+        const daysDiff = Math.floor(
+          (currentStart.getTime() - nextStart.getTime()) / (1000 * 60 * 60 * 24),
+        );
+        cycleLengths.push(daysDiff);
+      }
+      averageCycleLength = Math.round(
+        cycleLengths.reduce((a, b) => a + b, 0) / cycleLengths.length,
+      );
+    }
+
+    // Calculate average period duration
+    let averagePeriodDuration = profile.periodDuration || 5;
+    const completedCycles = cycles.filter((c) => c.endDate);
+    if (completedCycles.length > 0) {
+      const durations = completedCycles.map((cycle) => {
+        const start = new Date(cycle.startDate);
+        const end = new Date(cycle.endDate!);
+        return Math.floor(
+          (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24) + 1,
+        );
+      });
+      averagePeriodDuration = Math.round(
+        durations.reduce((a, b) => a + b, 0) / durations.length,
+      );
+    }
+
+    // Get the most recent cycle or period start
+    const lastCycle = await this.prisma.cycle.findFirst({
+      where: { profileId },
+      orderBy: { startDate: 'desc' },
+    });
+
+    const lastPeriodStart = lastCycle
+      ? new Date(lastCycle.startDate)
+      : profile.lastPeriodDate
+      ? new Date(profile.lastPeriodDate)
+      : null;
+
+    // Calculate predictions
+    let nextPeriodDate: Date | null = null;
+    let fertileWindowStart: Date | null = null;
+    let fertileWindowEnd: Date | null = null;
+
+    if (lastPeriodStart) {
+      // Next period prediction
+      nextPeriodDate = new Date(lastPeriodStart);
+      nextPeriodDate.setDate(nextPeriodDate.getDate() + averageCycleLength);
+
+      // Fertile window (typically days 10-15 of cycle, but we'll use 12-16 for 5-day window)
+      // Ovulation typically occurs 14 days before next period
+      const ovulationDay = averageCycleLength - 14;
+      fertileWindowStart = new Date(lastPeriodStart);
+      fertileWindowStart.setDate(
+        fertileWindowStart.getDate() + ovulationDay - 3,
+      );
+      fertileWindowEnd = new Date(lastPeriodStart);
+      fertileWindowEnd.setDate(fertileWindowEnd.getDate() + ovulationDay + 2);
+    }
+
+    return {
+      nextPeriodDate,
+      fertileWindowStart,
+      fertileWindowEnd,
+      averageCycleLength,
+      averagePeriodDuration,
+    };
+  }
+
+  async updateProfileAverages(profileId: string) {
+    const predictions = await this.calculatePredictions(profileId);
+
+    // Update profile with calculated averages
+    await this.prisma.profile.update({
+      where: { id: profileId },
+      data: {
+        cycleLength: predictions.averageCycleLength,
+        periodDuration: predictions.averagePeriodDuration,
+      },
+    });
   }
 }

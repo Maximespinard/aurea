@@ -50,6 +50,14 @@ export interface Cycle {
   dayEntries: DayEntry[];
 }
 
+export interface CyclePredictions {
+  nextPeriodDate: string | null;
+  fertileWindowStart: string | null;
+  fertileWindowEnd: string | null;
+  averageCycleLength: number;
+  averagePeriodDuration: number;
+}
+
 // API Methods
 export const cycleApi = {
   // Cycle operations
@@ -93,5 +101,11 @@ export const cycleApi = {
 
   deleteDayEntry: async (cycleId: string, date: string): Promise<void> => {
     await api.delete(`/cycles/${cycleId}/entries`, { params: { date } });
+  },
+
+  // Predictions
+  getPredictions: async (): Promise<CyclePredictions> => {
+    const { data } = await api.get('/cycles/predictions');
+    return data;
   },
 };

@@ -7,6 +7,7 @@ import type { UpdateCycleDto, CreateDayEntryDto } from '@/lib/api/cycle';
 // Query keys
 const CYCLES_KEY = ['cycles'];
 const CYCLE_KEY = (id: string) => ['cycle', id];
+const PREDICTIONS_KEY = ['cycle-predictions'];
 
 // Fetch all cycles
 export const useCycles = () => {
@@ -33,6 +34,7 @@ export const useCreateCycle = () => {
     mutationFn: cycleApi.createCycle,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: CYCLES_KEY });
+      queryClient.invalidateQueries({ queryKey: PREDICTIONS_KEY });
       toast.success('New cycle started!');
     },
     onError: (error) => {
@@ -92,6 +94,7 @@ export const useEndActiveCycle = () => {
     mutationFn: cycleApi.endActiveCycle,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: CYCLES_KEY });
+      queryClient.invalidateQueries({ queryKey: PREDICTIONS_KEY });
       toast.success('Cycle ended');
     },
     onError: (error) => {
@@ -147,5 +150,13 @@ export const useDeleteDayEntry = () => {
         'Failed to remove day entry';
       toast.error(message);
     },
+  });
+};
+
+// Fetch cycle predictions
+export const useCyclePredictions = () => {
+  return useQuery({
+    queryKey: PREDICTIONS_KEY,
+    queryFn: cycleApi.getPredictions,
   });
 };
