@@ -99,13 +99,6 @@ const RegisterForm = () => {
         >
           {registerMutation.isPending ? 'Creating Account...' : 'Create Account'}
         </Button>
-        {registerMutation.isError && (
-          <p className="text-destructive text-center text-sm mt-2">
-            {registerMutation.error instanceof Error 
-              ? registerMutation.error.message 
-              : 'Registration failed. Please try again.'}
-          </p>
-        )}
         <p className="mt-4 text-center text-sm text-muted-foreground">
           Already have an account?{' '}
           <NavLink
