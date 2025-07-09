@@ -16,6 +16,9 @@ export const registerSchema = z
       })
       .max(USERNAME_MAX, {
         message: `Your username must be at most ${USERNAME_MAX} characters`,
+      })
+      .regex(/^[a-zA-Z0-9_-]+$/, {
+        message: 'Username can only contain letters, numbers, underscores, and hyphens',
       }),
     email: z
       .string()
@@ -30,6 +33,9 @@ export const registerSchema = z
       })
       .max(PASSWORD_MAX, {
         message: `Your password must be at most ${PASSWORD_MAX} characters`,
+      })
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, {
+        message: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
       }),
     confirmPassword: z.string(),
   })
