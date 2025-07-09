@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -17,7 +18,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { CalendarIcon } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { CalendarIcon, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import {
@@ -27,9 +38,22 @@ import {
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { useProfileForm } from './useProfileForm';
+import { useDeleteProfile } from '@/hooks/useProfile';
+import { useNavigate } from 'react-router';
 
 const ProfileForm = () => {
   const { form, onSubmit, isLoading, profileExists } = useProfileForm();
+  const deleteProfileMutation = useDeleteProfile();
+  const navigate = useNavigate();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+  const handleDelete = () => {
+    deleteProfileMutation.mutate(undefined, {
+      onSuccess: () => {
+        navigate('/');
+      },
+    });
+  };
 
   return (
     <Form {...form}>
@@ -175,14 +199,48 @@ const ProfileForm = () => {
           )}
         />
 
-        <Button type="submit" disabled={isLoading}>
-          {isLoading
-            ? 'Saving...'
-            : profileExists
-            ? 'Save Changes'
-            : 'Create Profile'}
-        </Button>
+        <div className="flex gap-4">
+          <Button type="submit" disabled={isLoading}>
+            {isLoading
+              ? 'Saving...'
+              : profileExists
+              ? 'Save Changes'
+              : 'Create Profile'}
+          </Button>
+          {profileExists && (
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => setShowDeleteDialog(true)}
+              disabled={deleteProfileMutation.isPending}
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Delete Profile
+            </Button>
+          )}
+        </div>
       </form>
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your
+              profile and all associated data.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Form>
   );
 };
