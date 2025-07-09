@@ -57,6 +57,7 @@ const DashboardLayout = () => {
                   key={item.name}
                   to={item.href}
                   end={item.end}
+                  onClick={() => setIsSidebarOpen(false)}
                   className={({ isActive }) =>
                     `flex items-center px-4 py-3 rounded-lg transition-colors group ${
                       isActive
