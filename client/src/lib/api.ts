@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useAuthStore } from '@/stores/authStore';
 
 const API_BASE_URL = 'http://localhost:3000';
 
@@ -29,8 +30,14 @@ apiClient.interceptors.response.use(
   (error) => {
     // Handle 401 errors (unauthorized)
     if (error.response?.status === 401) {
-      localStorage.removeItem('access_token');
-      // Redirect to login could be added here
+      // Clear auth state from Zustand store
+      const { logout } = useAuthStore.getState();
+      logout();
+      
+      // Redirect to signin page
+      if (typeof window !== 'undefined') {
+        window.location.href = '/signin';
+      }
     }
     return Promise.reject(error);
   }
