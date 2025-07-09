@@ -44,10 +44,7 @@ export class CycleController {
   }
 
   @Get(':id')
-  async findOne(
-    @Request() req: AuthenticatedRequest,
-    @Param('id') id: string,
-  ) {
+  async findOne(@Request() req: AuthenticatedRequest, @Param('id') id: string) {
     const profile = await this.getProfile(req.user.sub);
     return this.cycleService.findOne(id, profile.id);
   }
@@ -70,10 +67,7 @@ export class CycleController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(
-    @Request() req: AuthenticatedRequest,
-    @Param('id') id: string,
-  ) {
+  async remove(@Request() req: AuthenticatedRequest, @Param('id') id: string) {
     const profile = await this.getProfile(req.user.sub);
     await this.cycleService.remove(id, profile.id);
   }

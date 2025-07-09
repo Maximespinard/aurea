@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCycleDto, UpdateCycleDto, CreateDayEntryDto } from './dto';
-import type { Prisma } from '@prisma/client';
+import type { Prisma, DayEntry } from '../../generated/prisma';
 
 type CycleWithEntries = Prisma.CycleGetPayload<{
   include: {
@@ -153,7 +153,7 @@ export class CycleService {
     cycleId: string,
     profileId: string,
     createDayEntryDto: CreateDayEntryDto,
-  ): Promise<Prisma.DayEntryGetPayload<{}>> {
+  ): Promise<DayEntry> {
     // Verify cycle belongs to user
     await this.findOne(cycleId, profileId);
 
@@ -250,7 +250,8 @@ export class CycleService {
         const currentStart = new Date(cycles[i].startDate);
         const nextStart = new Date(cycles[i + 1].startDate);
         const daysDiff = Math.floor(
-          (currentStart.getTime() - nextStart.getTime()) / (1000 * 60 * 60 * 24),
+          (currentStart.getTime() - nextStart.getTime()) /
+            (1000 * 60 * 60 * 24),
         );
         cycleLengths.push(daysDiff);
       }
@@ -284,8 +285,8 @@ export class CycleService {
     const lastPeriodStart = lastCycle
       ? new Date(lastCycle.startDate)
       : profile.lastPeriodDate
-      ? new Date(profile.lastPeriodDate)
-      : null;
+        ? new Date(profile.lastPeriodDate)
+        : null;
 
     // Calculate predictions
     let nextPeriodDate: Date | null = null;
