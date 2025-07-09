@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { cycleApi } from '@/lib/api/cycle';
 import { toast } from 'react-hot-toast';
 import type { ApiError } from '@/types/api';
-import type { CreateCycleDto, UpdateCycleDto, CreateDayEntryDto } from '@/lib/api/cycle';
+import type { UpdateCycleDto, CreateDayEntryDto } from '@/lib/api/cycle';
 
 // Query keys
 const CYCLES_KEY = ['cycles'];

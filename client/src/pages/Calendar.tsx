@@ -11,7 +11,7 @@ import { useCycleStore } from "@/stores/cycleStore";
 import { StartCycleModal } from "@/features/Cycle/StartCycleModal";
 import { EndCycleButton } from "@/features/Cycle/EndCycleButton";
 import { DayEntryModal } from "@/features/Cycle/DayEntryModal";
-import type { Cycle, DayEntry } from "@/lib/api/cycle";
+import type { DayEntry } from "@/lib/api/cycle";
 
 export default function Calendar() {
   const { selectedDate, setSelectedDate, setActiveCycle, getActiveCycleDay } = useCycleStore();
@@ -153,8 +153,8 @@ export default function Calendar() {
           <CardContent>
             <CalendarComponent
               mode="single"
-              selected={selectedDate}
-              onSelect={setSelectedDate}
+              selected={selectedDate || undefined}
+              onSelect={(date) => setSelectedDate(date || null)}
               className="rounded-md border"
               modifiers={{
                 period: (day) => isDayInPeriod(day),

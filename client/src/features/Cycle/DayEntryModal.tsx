@@ -67,8 +67,8 @@ export function DayEntryModal({
     const data = {
       date: date.toISOString(),
       symptoms: symptoms.length > 0 ? symptoms : undefined,
-      mood: mood || undefined,
-      flow: flow !== 'none' ? flow : undefined,
+      mood: mood as 'happy' | 'sad' | 'anxious' | 'irritable' | 'calm' | 'energetic' | undefined,
+      flow: flow !== 'none' ? (flow as 'light' | 'medium' | 'heavy') : undefined,
       temperature: temperature ? parseFloat(temperature) : undefined,
       notes: notes || undefined,
     };
