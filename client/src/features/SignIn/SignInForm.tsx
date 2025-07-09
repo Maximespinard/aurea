@@ -2,17 +2,20 @@ import { NavLink } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useSignInForm } from './useSignInForm';
+import { useLoginMutation } from '@/hooks/auth/useLoginMutation';
 import type { SignInFormValues } from './signIn.schema';
 
 const SignInForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useSignInForm();
 
+  const loginMutation = useLoginMutation();
+
   const handleSignIn = (values: SignInFormValues) => {
-    console.log('values:', values);
+    loginMutation.mutate(values);
   };
 
   return (
@@ -55,8 +58,12 @@ const SignInForm = () => {
         {errors?.password?.message && (
           <p className="text-destructive">{errors.password.message}</p>
         )}
-        <Button className="w-full mt-4" disabled={isSubmitting}>
-          Sign In
+        <Button 
+          className="w-full mt-4" 
+          disabled={loginMutation.isPending}
+          type="submit"
+        >
+          {loginMutation.isPending ? 'Signing In...' : 'Sign In'}
         </Button>
         <p className="mt-4 text-center text-sm text-muted-foreground">
           Don’t have an account?{' '}

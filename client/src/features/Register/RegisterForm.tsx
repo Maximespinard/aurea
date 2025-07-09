@@ -2,17 +2,20 @@ import { NavLink } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useRegisterForm } from './useRegisterForm';
+import { useRegisterMutation } from '@/hooks/auth/useRegisterMutation';
 import type { RegisterFormValues } from './register.schema';
 
 const RegisterForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitted },
+    formState: { errors },
   } = useRegisterForm();
 
+  const registerMutation = useRegisterMutation();
+
   const handleRegister = (values: RegisterFormValues) => {
-    console.log(values);
+    registerMutation.mutate(values);
   };
 
   return (
@@ -89,8 +92,12 @@ const RegisterForm = () => {
             <p className="text-destructive">{errors.confirmPassword.message}</p>
           )}
         </div>
-        <Button className="w-full mt-4" disabled={isSubmitted}>
-          Create Account
+        <Button 
+          className="w-full mt-4" 
+          disabled={registerMutation.isPending}
+          type="submit"
+        >
+          {registerMutation.isPending ? 'Creating Account...' : 'Create Account'}
         </Button>
         <p className="mt-4 text-center text-sm text-muted-foreground">
           Already have an account?{' '}
