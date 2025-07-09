@@ -1,27 +1,63 @@
 import { useAuthStore } from '@/stores/authStore';
 import { Calendar, User, Activity } from 'lucide-react';
+import { useProfile } from '@/hooks/useProfile';
+import { addDays, differenceInDays } from 'date-fns';
+import { useNavigate } from 'react-router';
+import { Button } from '@/components/ui/button';
 
 const Dashboard = () => {
   const { user } = useAuthStore();
+  const navigate = useNavigate();
+  const { data: profile, isLoading } = useProfile();
+
+  // Calculate cycle data
+  const calculateCycleData = () => {
+    if (!profile?.lastPeriodDate) {
+      return {
+        currentDay: '--',
+        nextPeriod: '--',
+        cycleLength: '--',
+      };
+    }
+
+    const lastPeriod = new Date(profile.lastPeriodDate);
+    const today = new Date();
+    const daysSinceLastPeriod = differenceInDays(today, lastPeriod);
+    const cycleLength = profile.cycleLength || 28;
+    const nextPeriodDate = addDays(lastPeriod, cycleLength);
+    const daysUntilNextPeriod = differenceInDays(nextPeriodDate, today);
+
+    return {
+      currentDay: daysSinceLastPeriod + 1,
+      nextPeriod: daysUntilNextPeriod > 0 
+        ? `${daysUntilNextPeriod} days` 
+        : daysUntilNextPeriod === 0 
+        ? 'Today' 
+        : 'Late',
+      cycleLength: `${cycleLength} days`,
+    };
+  };
+
+  const cycleData = calculateCycleData();
 
   const stats = [
     {
       title: 'Current Cycle Day',
-      value: '--',
+      value: cycleData.currentDay,
       icon: Activity,
-      description: 'Set up your profile to track cycles',
+      description: profile ? 'Days since last period' : 'Set up your profile to track cycles',
     },
     {
       title: 'Next Period',
-      value: '--',
+      value: cycleData.nextPeriod,
       icon: Calendar,
-      description: 'Add your last period date',
+      description: profile?.lastPeriodDate ? 'Estimated start date' : 'Add your last period date',
     },
     {
       title: 'Average Cycle',
-      value: '--',
+      value: cycleData.cycleLength,
       icon: User,
-      description: 'Complete profile setup',
+      description: profile ? 'Your cycle length' : 'Complete profile setup',
     },
   ];
 
@@ -71,28 +107,58 @@ const Dashboard = () => {
           Quick Actions
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <button className="p-4 text-left border rounded-lg hover:bg-gray-50 transition-colors">
+          <button 
+            onClick={() => navigate('/dashboard/profile')}
+            className="p-4 text-left border rounded-lg hover:bg-gray-50 transition-colors"
+          >
             <div className="flex items-center space-x-3">
               <User className="h-5 w-5 text-primary" />
               <div>
-                <p className="font-medium text-gray-900">Complete Profile</p>
+                <p className="font-medium text-gray-900">
+                  {profile ? 'Update Profile' : 'Complete Profile'}
+                </p>
                 <p className="text-sm text-gray-600">
-                  Set up your cycle information
+                  {profile ? 'Edit your cycle information' : 'Set up your cycle information'}
                 </p>
               </div>
             </div>
           </button>
-          <button className="p-4 text-left border rounded-lg hover:bg-gray-50 transition-colors">
+          <button 
+            onClick={() => navigate('/dashboard/calendar')}
+            className="p-4 text-left border rounded-lg hover:bg-gray-50 transition-colors"
+          >
             <div className="flex items-center space-x-3">
               <Calendar className="h-5 w-5 text-primary" />
               <div>
-                <p className="font-medium text-gray-900">Log Today</p>
-                <p className="text-sm text-gray-600">Add symptoms or notes</p>
+                <p className="font-medium text-gray-900">View Calendar</p>
+                <p className="text-sm text-gray-600">Track symptoms and cycles</p>
               </div>
             </div>
           </button>
         </div>
       </div>
+
+      {/* Profile Setup Prompt */}
+      {!profile && !isLoading && (
+        <div className="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <div className="flex items-center">
+            <div className="flex-1">
+              <h3 className="text-sm font-medium text-amber-800">
+                Complete Your Profile
+              </h3>
+              <p className="mt-1 text-sm text-amber-700">
+                Set up your cycle information to get personalized insights and predictions.
+              </p>
+            </div>
+            <Button 
+              onClick={() => navigate('/dashboard/profile')}
+              className="ml-4"
+            >
+              Set Up Profile
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

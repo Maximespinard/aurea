@@ -1,5 +1,5 @@
 import { apiClient } from '@/lib/api';
-import { RegisterFormValues } from '@/features/Register/register.schema';
+import type { RegisterFormValues } from '@/features/Register/register.schema';
 
 export interface RegisterRequest {
   username: string;
