@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import Calendar from "react-calendar";
 import { format, isSameDay } from "date-fns";
-import "./PremiumCalendar.css";
+import "./CalendarWidget.css";
 
-interface PremiumCalendarProps {
+interface CalendarWidgetProps {
   selected?: Date | null;
   onSelect?: (date: Date | null) => void;
   periodDays: Date[];
@@ -13,7 +13,7 @@ interface PremiumCalendarProps {
   daysWithEntries?: Date[];
 }
 
-export function PremiumCalendar({
+export function CalendarWidget({
   selected,
   onSelect,
   periodDays,
@@ -21,7 +21,7 @@ export function PremiumCalendar({
   fertileDays,
   activeCycleDay,
   daysWithEntries = [],
-}: PremiumCalendarProps) {
+}: CalendarWidgetProps) {
   const [value, setValue] = useState<Date>(selected || new Date());
   const calendarRef = useRef<HTMLDivElement>(null);
 

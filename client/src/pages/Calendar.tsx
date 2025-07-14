@@ -6,7 +6,7 @@ import { useProfile } from "@/hooks/useProfile";
 import { useCycleStore } from "@/stores/cycleStore";
 import { StartCycleModal } from "@/features/Cycle/StartCycleModal";
 import { DayEntryModal } from "@/features/Cycle/DayEntryModal";
-import { PremiumCalendar } from "@/components/Calendar/PremiumCalendar";
+import { CalendarWidget } from "@/features/Calendar/CalendarWidget";
 import { CalendarHeader } from "@/features/Calendar/components/CalendarHeader";
 import { CalendarLegend } from "@/features/Calendar/components/CalendarLegend";
 import { CycleInformation } from "@/features/Calendar/components/CycleInformation";
@@ -73,7 +73,7 @@ export default function Calendar() {
         {' '}
         <Card className="shadow-xl border-primary/10 overflow-hidden">
           <CardContent className="px-6">
-            <PremiumCalendar
+            <CalendarWidget
               selected={selectedDate}
               onSelect={(date) => setSelectedDate(date)}
               periodDays={periodDays}
