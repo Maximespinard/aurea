@@ -481,6 +481,21 @@
   opacity: 0.7;
 }
 
+/* Fertile window on future dates - should remain visible */
+.premium-calendar .react-calendar__tile.future-date.fertile-day {
+  opacity: 0.8 !important;
+  background: linear-gradient(
+    135deg,
+    var(--cycle-fertile-start) 0%,
+    var(--cycle-fertile-end) 100%
+  ) !important;
+  color: white !important;
+  border-color: var(--cycle-fertile-start) !important;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+
 /* Animations */
 @keyframes shimmer {
   0% {
