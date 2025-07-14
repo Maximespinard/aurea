@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import { useCycleStore } from "@/stores/cycleStore";
 import { StartCycleModal } from "@/features/Cycle/StartCycleModal";
 import { EndCycleButton } from "@/features/Cycle/EndCycleButton";
 import { DayEntryModal } from "@/features/Cycle/DayEntryModal";
+import { PremiumCalendar } from "@/components/Calendar/PremiumCalendar";
 import type { DayEntry } from "@/lib/api/cycle";
 
 export default function Calendar() {
@@ -150,35 +150,14 @@ export default function Calendar() {
               Calendar View
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <CalendarComponent
-              mode="single"
-              selected={selectedDate || undefined}
-              onSelect={(date) => setSelectedDate(date || null)}
-              className="rounded-md border"
-              modifiers={{
-                period: (day) => isDayInPeriod(day),
-                predicted: (day) => isDayPredicted(day),
-                fertile: (day) => isDayFertile(day),
-              }}
-              modifiersStyles={{
-                period: {
-                  backgroundColor: "hsl(var(--destructive))",
-                  color: "hsl(var(--destructive-foreground))",
-                  borderRadius: "0.375rem",
-                },
-                predicted: {
-                  backgroundColor: "hsl(var(--destructive) / 0.3)",
-                  color: "hsl(var(--destructive-foreground))",
-                  borderRadius: "0.375rem",
-                  border: "1px dashed hsl(var(--destructive))",
-                },
-                fertile: {
-                  backgroundColor: "hsl(142, 76%, 36%)",
-                  color: "white",
-                  borderRadius: "0.375rem",
-                },
-              }}
+          <CardContent className="p-6">
+            <PremiumCalendar
+              selected={selectedDate}
+              onSelect={(date) => setSelectedDate(date)}
+              periodDays={periodDays}
+              predictedDays={nextPeriodDays}
+              fertileDays={fertileDays}
+              activeCycleDay={(date) => getActiveCycleDay(date)}
             />
           </CardContent>
         </Card>
