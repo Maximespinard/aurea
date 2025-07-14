@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateProfileDto, UpdateProfileDto } from './dto';
-import { Prisma } from '../../generated/prisma';
+import { Prisma } from '@prisma/client';
 
 // Type for profile queries that include user data
 type ProfileWithUser = Prisma.ProfileGetPayload<{

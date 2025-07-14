@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCycleDto, UpdateCycleDto, CreateDayEntryDto } from './dto';
-import type { Prisma, DayEntry } from '../../generated/prisma';
+import type { Prisma, DayEntry } from '@prisma/client';
 
 type CycleWithEntries = Prisma.CycleGetPayload<{
   include: {
