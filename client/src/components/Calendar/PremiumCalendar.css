@@ -266,15 +266,6 @@
   }
 }
 
-/* Weekend days - subtle purple tint */
-.premium-calendar .react-calendar__tile:nth-child(7n-1),
-.premium-calendar .react-calendar__tile:nth-child(7n) {
-  background: linear-gradient(
-    135deg,
-    #faf5ff 0%,
-    #f3e8ff 100%
-  );
-}
 
 /* Today - Special highlight with blue gradient */
 .premium-calendar .react-calendar__tile.today {
@@ -315,16 +306,12 @@
   }
 }
 
-/* Selected day */
+/* Selected day - Primary purple color */
 .premium-calendar .react-calendar__tile.selected {
-  background: linear-gradient(
-    135deg,
-    #8b5cf6 0%,
-    #7c3aed 100%
-  ) !important;
+  background: #a855f7 !important;
   color: #ffffff !important;
-  border-color: #7c3aed !important;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+  border-color: #9333ea !important;
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
   transform: scale(1.02);
 }
 
