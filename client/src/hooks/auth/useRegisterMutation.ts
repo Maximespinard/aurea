@@ -1,14 +1,14 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
-import { authService } from '@/services/auth.service';
+import { authApi } from '@/lib/api/auth';
 import { handleAuthError } from '@/lib/error-utils';
 
 export const useRegisterMutation = () => {
   const navigate = useNavigate();
 
   return useMutation({
-    mutationFn: authService.register,
+    mutationFn: authApi.register,
     onSuccess: () => {
       // Show success toast
       toast.success(

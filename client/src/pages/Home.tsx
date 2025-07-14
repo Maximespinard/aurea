@@ -1,8 +1,8 @@
-import CallToAction from '@/features/home/CallToAction';
-import Features from '@/features/home/Features';
-import Hero from '@/features/home/Hero';
-import HowItWorks from '@/features/home/HowItWorks';
-import Testimonials from '@/features/home/Testimonials';
+import CallToAction from '@/features/Home/CallToAction';
+import Features from '@/features/Home/Features';
+import Hero from '@/features/Home/Hero';
+import HowItWorks from '@/features/Home/HowItWorks';
+import Testimonials from '@/features/Home/Testimonials';
 
 const Home = () => {
   return (
