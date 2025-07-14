@@ -113,8 +113,8 @@
   margin: 3px;
   position: relative;
   transition: all 0.2s ease;
-  min-height: 60px;
   isolation: isolate;
+  height: 80px;
 }
 
 .premium-calendar .react-calendar__tile:hover {
@@ -251,7 +251,11 @@
 
 /* Fertile window - Lower priority than period and predicted */
 .premium-calendar .react-calendar__tile.fertile-day {
-  background: linear-gradient(135deg, var(--cycle-fertile-start) 0%, var(--cycle-fertile-end) 100%) !important;
+  background: linear-gradient(
+    135deg,
+    var(--cycle-fertile-start) 0%,
+    var(--cycle-fertile-end) 100%
+  ) !important;
   color: white !important;
   border-color: var(--cycle-fertile-start) !important;
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
@@ -264,7 +268,8 @@
 }
 
 /* Outside month days */
-.premium-calendar .react-calendar__tile.react-calendar__month-view__days__day--neighboringMonth {
+.premium-calendar
+  .react-calendar__tile.react-calendar__month-view__days__day--neighboringMonth {
   opacity: 0.3;
   color: hsl(var(--muted-foreground));
 }
@@ -288,15 +293,14 @@
 /* Responsive design */
 @media (max-width: 768px) {
   .premium-calendar .react-calendar__tile {
-    min-height: 48px;
     font-size: 0.875rem;
     margin: 2px;
   }
-  
+
   .date-number {
     font-size: 0.875rem;
   }
-  
+
   .cycle-badge {
     font-size: 0.5rem;
   }
@@ -304,11 +308,10 @@
 
 @media (max-width: 480px) {
   .premium-calendar .react-calendar__tile {
-    min-height: 44px;
     font-size: 0.8125rem;
     margin: 1.5px;
   }
-  
+
   .date-number {
     font-size: 0.8125rem;
   }
