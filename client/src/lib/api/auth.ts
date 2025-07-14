@@ -32,7 +32,7 @@ export interface LoginResponse {
   access_token: string;
 }
 
-export const authService = {
+export const authApi = {
   async register(data: RegisterFormValues): Promise<RegisterResponse> {
     const requestData: RegisterRequest = {
       username: data.username,

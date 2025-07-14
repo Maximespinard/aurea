@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
-import { authService } from '@/services/auth.service';
+import { authApi } from '@/lib/api/auth';
 import { handleAuthError } from '@/lib/error-utils';
 import { useAuthStore } from '@/stores/authStore';
 import { profileApi } from '@/lib/api/profile';
@@ -11,7 +11,7 @@ export const useLoginMutation = () => {
   const { setAuth } = useAuthStore();
 
   return useMutation({
-    mutationFn: authService.login,
+    mutationFn: authApi.login,
     onSuccess: async (data) => {
       // Update Zustand store with user data and token
       setAuth(data.user, data.access_token);
