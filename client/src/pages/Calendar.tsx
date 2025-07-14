@@ -85,18 +85,8 @@ export default function Calendar() {
           </CardContent>
         </Card>
         <div className="space-y-3">
-          {!activeCycle && (
-            <Button
-              onClick={() => setShowStartModal(true)}
-              className="w-full bg-primary hover:bg-primary/90 shadow-lg"
-              size="lg"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Start Period
-            </Button>
-          )}
           <CalendarLegend />
-          
+
           <CycleInformation
             predictions={predictions}
             profile={profile}
@@ -116,6 +106,18 @@ export default function Calendar() {
               onEditEntry={() => setShowDayEntryModal(true)}
             />
           )}
+
+          {!activeCycle && (
+            <Button
+              onClick={() => setShowStartModal(true)}
+              className="w-full bg-primary hover:bg-primary/90 shadow-lg"
+              size="lg"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Start Period
+            </Button>
+          )}
+          
         </div>
       </div>
 
