@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, Droplets, Heart, Activity, Plus, Loader2, Edit } from "lucide-react";
+import { Droplets, Heart, Activity, Plus, Loader2, Edit, Sparkles, TrendingUp } from "lucide-react";
 import { format, addDays, isSameDay, isAfter } from "date-fns";
 import { useCycles, useCyclePredictions } from "@/hooks/useCycle";
 import { useProfile } from "@/hooks/useProfile";
@@ -131,38 +131,40 @@ export default function Calendar() {
   }
 
   return (
-    <div className="container max-w-6xl py-8">
-      <div className="mb-8 flex justify-between items-start">
-        <div>
-          <h1 className="text-3xl font-bold">Cycle Calendar</h1>
-          <p className="text-muted-foreground mt-2">
-            Track your menstrual cycle and symptoms
-          </p>
-        </div>
-        <div className="flex gap-2">
-          {!activeCycle && (
-            <Button onClick={() => setShowStartModal(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              Start Period
-            </Button>
-          )}
-          {activeCycle && (
-            <EndCycleButton
-              cycleStartDate={activeCycle.startDate}
-              currentDay={getActiveCycleDay(new Date()) || 1}
-            />
-          )}
+    <div className="min-h-[calc(100vh-4rem)]">
+      <div className="mb-8 p-8 -m-6 rounded-b-2xl">
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+              Cycle Calendar
+            </h1>
+            <p className="text-muted-foreground mt-3 text-lg">
+              Track your menstrual cycle and symptoms
+            </p>
+          </div>
+          <div className="flex gap-2">
+            {!activeCycle && (
+              <Button 
+                onClick={() => setShowStartModal(true)}
+                className="bg-primary hover:bg-primary/90 shadow-lg"
+                size="lg"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Start Period
+              </Button>
+            )}
+            {activeCycle && (
+              <EndCycleButton
+                cycleStartDate={activeCycle.startDate}
+                currentDay={getActiveCycleDay(new Date()) || 1}
+              />
+            )}
+          </div>
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-[1fr_300px]">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CalendarIcon className="h-5 w-5" />
-              Calendar View
-            </CardTitle>
-          </CardHeader>
+      <div className="grid gap-6 lg:grid-cols-[1fr_320px] px-6">
+        <Card className="shadow-xl border-primary/10 overflow-hidden">
           <CardContent className="p-6">
             <PremiumCalendar
               selected={selectedDate}
@@ -176,44 +178,50 @@ export default function Calendar() {
           </CardContent>
         </Card>
 
-        <div className="space-y-4">
-          <Card>
+        <div className="space-y-3">
+          <Card className="shadow-lg border-primary/10">
             <CardHeader>
-              <CardTitle>Legend</CardTitle>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-primary" />
+                Legend
+              </CardTitle>
               <CardDescription>Cycle phase indicators</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="w-4 h-4 rounded" style={{ backgroundColor: 'var(--cycle-period-color)' }} />
-                <span className="text-sm">Period Days</span>
+            <CardContent className="space-y-4 pt-2">
+              <div className="flex items-center gap-3 rounded-lg hover:bg-muted/50 transition-colors">
+                <div className="w-5 h-5 rounded-md shadow-sm" style={{ backgroundColor: 'var(--cycle-period-color)' }} />
+                <span className="text-sm font-medium">Period Days</span>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 rounded-lg hover:bg-muted/50 transition-colors">
                 <div 
-                  className="w-4 h-4 rounded border-2 border-dashed" 
+                  className="w-5 h-5 rounded-md border-2 border-dashed shadow-sm" 
                   style={{ 
                     backgroundColor: 'var(--cycle-period-light)', 
                     borderColor: 'var(--cycle-period-color)' 
                   }} 
                 />
-                <span className="text-sm">Predicted Period</span>
+                <span className="text-sm font-medium">Predicted Period</span>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 rounded-lg hover:bg-muted/50 transition-colors">
                 <div 
-                  className="w-4 h-4 rounded" 
+                  className="w-5 h-5 rounded-md shadow-sm" 
                   style={{ 
                     background: 'linear-gradient(135deg, var(--cycle-fertile-start) 0%, var(--cycle-fertile-end) 100%)' 
                   }} 
                 />
-                <span className="text-sm">Fertile Window</span>
+                <span className="text-sm font-medium">Fertile Window</span>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="shadow-lg border-primary/10">
             <CardHeader>
-              <CardTitle>Cycle Information</CardTitle>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 text-primary" />
+                Cycle Information
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-4 pt-2">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-muted-foreground">Cycle Length</span>
                 <span className="font-medium">
@@ -232,14 +240,10 @@ export default function Calendar() {
                   {nextPeriodPrediction ? format(nextPeriodPrediction, "MMM d") : '-'}
                 </span>
               </div>
-              {predictions && cycles.filter(c => c.endDate).length >= 2 && (
-                <div className="text-xs text-muted-foreground text-center pt-2">
-                  Based on {cycles.filter(c => c.endDate).length} previous cycles
-                </div>
-              )}
               {activeCycle && (
-                <div className="pt-2 border-t">
-                  <p className="text-sm font-medium text-destructive">
+                <div className="pt-3 border-t">
+                  <p className="text-sm font-semibold text-primary flex items-center gap-2">
+                    <Activity className="h-4 w-4" />
                     Active period (Day {getActiveCycleDay(new Date())})
                   </p>
                 </div>
@@ -248,37 +252,38 @@ export default function Calendar() {
           </Card>
 
           {selectedDate && (
-            <Card>
+            <Card className="shadow-lg border-primary/10">
               <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>{format(selectedDate, "MMMM d, yyyy")}</CardTitle>
+                <CardTitle className="text-lg">{format(selectedDate, "MMMM d, yyyy")}</CardTitle>
                 {cycles.length > 0 && (
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => setShowDayEntryModal(true)}
+                    className="border-primary/20 hover:bg-primary/10 hover:border-primary/30"
                   >
                     <Edit className="mr-1 h-3 w-3" />
                     {getDayEntry(selectedDate) ? 'Edit' : 'Add'} Entry
                   </Button>
                 )}
               </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
+              <CardContent className="pt-2">
+                <div className="space-y-3">
                   {isDayInPeriod(selectedDate) && (
-                    <Badge className="w-full justify-center badge-period">
-                      <Droplets className="w-3 h-3 mr-1" />
+                    <Badge className="w-full justify-center badge-period py-2 text-sm">
+                      <Droplets className="w-4 h-4 mr-2" />
                       Period Day
                     </Badge>
                   )}
                   {isDayPredicted(selectedDate) && (
-                    <Badge className="w-full justify-center badge-predicted">
-                      <Droplets className="w-3 h-3 mr-1" />
+                    <Badge className="w-full justify-center badge-predicted py-2 text-sm">
+                      <Droplets className="w-4 h-4 mr-2" />
                       Predicted Period
                     </Badge>
                   )}
                   {isDayFertile(selectedDate) && (
-                    <Badge className="w-full justify-center badge-fertile">
-                      <Heart className="w-3 h-3 mr-1" />
+                    <Badge className="w-full justify-center badge-fertile py-2 text-sm">
+                      <Heart className="w-4 h-4 mr-2" />
                       Fertile Day
                     </Badge>
                   )}
