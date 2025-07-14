@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -17,16 +16,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { CalendarIcon } from 'lucide-react';
-import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
-import { useCreateCycle } from '@/hooks/useCycle';
+import { useStartCycleForm } from './hooks/useStartCycleForm';
+import { SymptomSelector } from './components/SymptomSelector';
+import { DatePicker } from './components/DatePicker';
 
 interface StartCycleModalProps {
   open: boolean;
@@ -34,35 +26,18 @@ interface StartCycleModalProps {
 }
 
 export function StartCycleModal({ open, onOpenChange }: StartCycleModalProps) {
-  const [startDate, setStartDate] = useState<Date | undefined>(new Date());
-  const [flow, setFlow] = useState<string>('medium');
-  const [notes, setNotes] = useState('');
-  const [symptoms, setSymptoms] = useState<string[]>([]);
-
-  const createCycleMutation = useCreateCycle();
-
-  const handleSubmit = () => {
-    if (!startDate) return;
-
-    createCycleMutation.mutate(
-      {
-        startDate: startDate.toISOString(),
-        flow: flow as 'light' | 'medium' | 'heavy',
-        notes: notes || undefined,
-        symptoms: symptoms.length > 0 ? symptoms : undefined,
-      },
-      {
-        onSuccess: () => {
-          onOpenChange(false);
-          // Reset form
-          setStartDate(new Date());
-          setFlow('medium');
-          setNotes('');
-          setSymptoms([]);
-        },
-      }
-    );
-  };
+  const {
+    startDate,
+    setStartDate,
+    flow,
+    setFlow,
+    notes,
+    setNotes,
+    symptoms,
+    toggleSymptom,
+    handleSubmit,
+    isLoading,
+  } = useStartCycleForm(() => onOpenChange(false));
 
   const commonSymptoms = [
     'Cramps',
@@ -74,14 +49,6 @@ export function StartCycleModal({ open, onOpenChange }: StartCycleModalProps) {
     'Nausea',
     'Breast tenderness',
   ];
-
-  const toggleSymptom = (symptom: string) => {
-    setSymptoms((prev) =>
-      prev.includes(symptom)
-        ? prev.filter((s) => s !== symptom)
-        : [...prev, symptom]
-    );
-  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -96,29 +63,11 @@ export function StartCycleModal({ open, onOpenChange }: StartCycleModalProps) {
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
             <Label>Start Date</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    'w-full justify-start text-left font-normal',
-                    !startDate && 'text-muted-foreground'
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {startDate ? format(startDate, 'PPP') : 'Pick a date'}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={startDate}
-                  onSelect={setStartDate}
-                  initialFocus
-                  disabled={(date) => date > new Date()}
-                />
-              </PopoverContent>
-            </Popover>
+            <DatePicker 
+              date={startDate}
+              onDateChange={setStartDate}
+              placeholder="Pick a date"
+            />
           </div>
 
           <div className="space-y-2">
@@ -135,22 +84,22 @@ export function StartCycleModal({ open, onOpenChange }: StartCycleModalProps) {
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label>Symptoms</Label>
-            <div className="flex flex-wrap gap-2">
-              {commonSymptoms.map((symptom) => (
-                <Button
-                  key={symptom}
-                  type="button"
-                  variant={symptoms.includes(symptom) ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => toggleSymptom(symptom)}
-                >
-                  {symptom}
-                </Button>
-              ))}
-            </div>
-          </div>
+          <SymptomSelector 
+            symptoms={symptoms} 
+            onChange={(newSymptoms) => {
+              // Replace all symptoms with the new selection
+              newSymptoms.forEach(symptom => {
+                if (!symptoms.includes(symptom)) {
+                  toggleSymptom(symptom);
+                }
+              });
+              symptoms.forEach(symptom => {
+                if (!newSymptoms.includes(symptom)) {
+                  toggleSymptom(symptom);
+                }
+              });
+            }}
+          />
 
           <div className="space-y-2">
             <Label htmlFor="notes">Notes (Optional)</Label>
@@ -175,9 +124,9 @@ export function StartCycleModal({ open, onOpenChange }: StartCycleModalProps) {
           <Button
             type="button"
             onClick={handleSubmit}
-            disabled={!startDate || createCycleMutation.isPending}
+            disabled={!startDate || isLoading}
           >
-            {createCycleMutation.isPending ? 'Starting...' : 'Start Period'}
+            {isLoading ? 'Starting...' : 'Start Period'}
           </Button>
         </DialogFooter>
       </DialogContent>
