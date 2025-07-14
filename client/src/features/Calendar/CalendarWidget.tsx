@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { CalendarTileContent } from "./components/CalendarTileContent";
 import { useCalendarDates } from "./hooks/useCalendarDates";
 import { useClickOutside } from "./hooks/useClickOutside";
-import { CALENDAR_CONFIG, WEEKDAY_FORMAT } from "./constants";
+import { CALENDAR_CONFIG, WEEKDAY_FORMAT } from "@/lib/constants";
 import "./CalendarWidget.css";
 
 interface CalendarWidgetProps {
