@@ -76,10 +76,10 @@
   --sidebar-ring: oklch(0.708 0 0);
   
   /* Cycle tracking colors */
-  --cycle-period-color: #ef4444;
-  --cycle-period-dark: #dc2626;
-  --cycle-period-light: rgba(239, 68, 68, 0.15);
-  --cycle-period-light-pattern: rgba(239, 68, 68, 0.08);
+  --cycle-period-color: #a855f7;
+  --cycle-period-dark: #9333ea;
+  --cycle-period-light: rgba(168, 85, 247, 0.15);
+  --cycle-period-light-pattern: rgba(168, 85, 247, 0.08);
   --cycle-fertile-start: #10b981;
   --cycle-fertile-end: #059669;
 }

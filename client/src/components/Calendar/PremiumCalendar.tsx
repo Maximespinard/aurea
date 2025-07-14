@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Calendar from "react-calendar";
 import { format, isSameDay } from "date-fns";
 import "./PremiumCalendar.css";
 
 interface PremiumCalendarProps {
   selected?: Date | null;
-  onSelect?: (date: Date) => void;
+  onSelect?: (date: Date | null) => void;
   periodDays: Date[];
   predictedDays: Date[];
   fertileDays: Date[];
@@ -23,6 +23,27 @@ export function PremiumCalendar({
   daysWithEntries = [],
 }: PremiumCalendarProps) {
   const [value, setValue] = useState<Date>(selected || new Date());
+  const calendarRef = useRef<HTMLDivElement>(null);
+
+  // Handle clicks outside calendar to deselect
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
+        // Check if click is not on the right sidebar (day details)
+        const target = event.target as HTMLElement;
+        const isInSidebar = target.closest('.space-y-3'); // The right sidebar container
+        
+        if (!isInSidebar) {
+          onSelect?.(null);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onSelect]);
 
   const handleDateChange = (newValue: any, _event: any) => {
     if (!newValue) return;
@@ -100,14 +121,15 @@ export function PremiumCalendar({
   };
 
   return (
-    <div className="premium-calendar-wrapper">
+    <div className="premium-calendar-wrapper" ref={calendarRef}>
       <Calendar
         value={value}
         onChange={handleDateChange}
         className="premium-calendar"
         tileContent={getTileContent}
         tileClassName={getTileClassName}
-        showNeighboringMonth={false}
+        showNeighboringMonth={true}
+        showFixedNumberOfWeeks={false}
         prevLabel="‹"
         nextLabel="›"
         prev2Label="«"
@@ -115,6 +137,11 @@ export function PremiumCalendar({
         formatShortWeekday={(_locale, date) => 
           format(date, "EEE").slice(0, 2).toUpperCase()
         }
+        onClickMonth={() => {}} // Disable month selection
+        onClickYear={() => {}} // Disable year selection
+        onClickDecade={() => {}} // Disable decade selection
+        view="month" // Force month view
+        maxDetail="month" // Prevent drilling down to year/decade view
       />
     </div>
   );
