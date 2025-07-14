@@ -1,7 +1,7 @@
 import { addDays, differenceInDays } from 'date-fns';
 import type { Profile } from '@/lib/api/profile';
 
-export function useCycleCalculations(profile: Profile | undefined) {
+export function useCycleCalculations(profile: Profile | null | undefined) {
   const calculateCycleData = () => {
     if (!profile?.lastPeriodDate) {
       return {

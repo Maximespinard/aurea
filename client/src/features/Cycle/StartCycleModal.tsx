@@ -39,17 +39,6 @@ export function StartCycleModal({ open, onOpenChange }: StartCycleModalProps) {
     isLoading,
   } = useStartCycleForm(() => onOpenChange(false));
 
-  const commonSymptoms = [
-    'Cramps',
-    'Headache',
-    'Backache',
-    'Bloating',
-    'Mood swings',
-    'Fatigue',
-    'Nausea',
-    'Breast tenderness',
-  ];
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">

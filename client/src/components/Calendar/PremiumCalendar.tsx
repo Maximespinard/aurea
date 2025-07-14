@@ -45,9 +45,16 @@ export function PremiumCalendar({
     };
   }, [onSelect]);
 
-  const handleDateChange = (newValue: any, _event: any) => {
+  const handleDateChange = (newValue: Date | Date[] | [Date | null, Date | null] | null) => {
     if (!newValue) return;
-    const date = Array.isArray(newValue) ? newValue[0] : newValue;
+    
+    let date: Date | null = null;
+    if (Array.isArray(newValue)) {
+      date = newValue[0];
+    } else {
+      date = newValue;
+    }
+    
     if (date instanceof Date) {
       setValue(date);
       onSelect?.(date);

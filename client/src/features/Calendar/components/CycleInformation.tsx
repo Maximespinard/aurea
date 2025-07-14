@@ -6,7 +6,7 @@ import type { Profile } from "@/lib/api/profile";
 
 interface CycleInformationProps {
   predictions: CyclePredictions | undefined;
-  profile: Profile | undefined;
+  profile: Profile | null | undefined;
   activeCycle: Cycle | null;
   getActiveCycleDay: (date: Date) => number | null;
   nextPeriodPrediction: Date | null;

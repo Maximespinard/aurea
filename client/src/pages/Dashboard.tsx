@@ -41,7 +41,7 @@ const Dashboard = () => {
             <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
               <div 
                 className="h-full bg-gradient-to-r from-primary to-primary/70 transition-all duration-500 ease-out"
-                style={{ width: `${Math.min((cycleData.currentDay / (profile.cycleLength || 28)) * 100, 100)}%` }}
+                style={{ width: `${Math.min((typeof cycleData.currentDay === 'number' ? cycleData.currentDay : 0) / (profile.cycleLength || 28) * 100, 100)}%` }}
               />
             </div>
             <div className="flex justify-between mt-2 text-xs text-muted-foreground">

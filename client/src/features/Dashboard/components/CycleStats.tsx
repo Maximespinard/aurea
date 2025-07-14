@@ -3,11 +3,11 @@ import type { Profile } from '@/lib/api/profile';
 import { useCycleCalculations } from '../hooks/useCycleCalculations';
 
 interface CycleStatsProps {
-  profile: Profile | undefined;
+  profile: Profile | null | undefined;
   isLoading: boolean;
 }
 
-export function CycleStats({ profile, isLoading }: CycleStatsProps) {
+export function CycleStats({ profile }: CycleStatsProps) {
   const cycleData = useCycleCalculations(profile);
 
   const stats = [
