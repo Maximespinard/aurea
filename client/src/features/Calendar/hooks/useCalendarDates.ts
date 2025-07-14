@@ -1,4 +1,4 @@
-import { isSameDay } from 'date-fns';
+import { isSameDay, isAfter, startOfDay } from 'date-fns';
 
 interface UseCalendarDatesProps {
   periodDays: Date[];
@@ -33,6 +33,11 @@ export function useCalendarDates({
   const hasEntry = (date: Date) =>
     daysWithEntries.some(d => isSameDay(d, date));
 
+  const isFutureDate = (date: Date) => {
+    const today = startOfDay(new Date());
+    return isAfter(startOfDay(date), today);
+  };
+
   const getDayType = (date: Date) => {
     // Priority order: period > predicted > fertile
     if (isPeriodDay(date)) return 'period';
@@ -52,6 +57,7 @@ export function useCalendarDates({
     if (isToday(date)) classes.push("today");
     if (isSelected(date)) classes.push("selected");
     if (hasEntry(date)) classes.push("has-entry");
+    if (isFutureDate(date)) classes.push("future-date");
     
     return classes.join(" ");
   };
@@ -63,6 +69,7 @@ export function useCalendarDates({
     isToday,
     isSelected,
     hasEntry,
+    isFutureDate,
     getDayType,
     getTileClassName,
   };

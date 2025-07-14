@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Loader2, Plus } from "lucide-react";
 import { useCycles, useCyclePredictions } from "@/hooks/useCycle";
 import { useProfile } from "@/hooks/useProfile";
 import { useCycleStore } from "@/stores/cycleStore";
@@ -63,7 +64,6 @@ export default function Calendar() {
       <CalendarHeader
         activeCycle={activeCycle}
         getActiveCycleDay={getActiveCycleDay}
-        onStartPeriod={() => setShowStartModal(true)}
       />
 
       <div
@@ -86,7 +86,7 @@ export default function Calendar() {
         </Card>
         <div className="space-y-3">
           <CalendarLegend />
-          
+
           <CycleInformation
             predictions={predictions}
             profile={profile}
@@ -106,6 +106,18 @@ export default function Calendar() {
               onEditEntry={() => setShowDayEntryModal(true)}
             />
           )}
+
+          {!activeCycle && (
+            <Button
+              onClick={() => setShowStartModal(true)}
+              className="w-full bg-primary hover:bg-primary/90 shadow-lg"
+              size="lg"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Start Period
+            </Button>
+          )}
+          
         </div>
       </div>
 

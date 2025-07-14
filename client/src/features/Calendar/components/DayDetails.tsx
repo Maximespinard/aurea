@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Droplets, Heart, Activity, Edit } from "lucide-react";
-import { format } from "date-fns";
+import { format, isAfter, startOfDay } from "date-fns";
 import type { DayEntry, Cycle } from "@/lib/api/cycle";
 
 interface DayDetailsProps {
@@ -25,6 +25,7 @@ export function DayDetails({
   onEditEntry
 }: DayDetailsProps) {
   const dayEntry = getDayEntry(selectedDate);
+  const isFutureDate = isAfter(startOfDay(selectedDate), startOfDay(new Date()));
 
   return (
     <Card className="shadow-lg border-primary/10">
@@ -32,7 +33,7 @@ export function DayDetails({
         <CardTitle className="text-lg">
           {format(selectedDate, 'MMMM d, yyyy')}
         </CardTitle>
-        {cycles.length > 0 && (
+        {cycles.length > 0 && !isFutureDate && (
           <Button
             size="sm"
             variant="outline"
@@ -42,6 +43,11 @@ export function DayDetails({
             <Edit className="mr-1 h-3 w-3" />
             {dayEntry ? 'Edit' : 'Add'} Entry
           </Button>
+        )}
+        {isFutureDate && (
+          <Badge variant="outline" className="text-xs text-muted-foreground border-muted-foreground/30">
+            Future Date
+          </Badge>
         )}
       </CardHeader>
       <CardContent className="pt-2">
