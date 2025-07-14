@@ -107,6 +107,19 @@ export default function Calendar() {
     return null;
   };
 
+  // Get all days with entries (symptoms, mood, or notes)
+  const daysWithEntries = useMemo(() => {
+    const days: Date[] = [];
+    cycles.forEach((cycle) => {
+      cycle.dayEntries.forEach((entry) => {
+        if (entry.symptoms.length > 0 || entry.mood || entry.notes) {
+          days.push(new Date(entry.date));
+        }
+      });
+    });
+    return days;
+  }, [cycles]);
+
   if (isLoading) {
     return (
       <div className="container max-w-6xl py-8">
@@ -158,6 +171,7 @@ export default function Calendar() {
               predictedDays={nextPeriodDays}
               fertileDays={fertileDays}
               activeCycleDay={(date) => getActiveCycleDay(date)}
+              daysWithEntries={daysWithEntries}
             />
           </CardContent>
         </Card>

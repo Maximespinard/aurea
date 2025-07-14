@@ -164,6 +164,64 @@
   opacity: 0.8;
 }
 
+/* Entry indicator - shows when day has notes/symptoms/mood */
+.entry-indicator {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  width: 20px;
+  height: 20px;
+  background: hsl(var(--primary) / 0.1);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--primary));
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  border: 1px solid hsl(var(--primary) / 0.2);
+}
+
+.entry-indicator svg {
+  width: 20px;
+  height: 20px;
+  opacity: 0.8;
+}
+
+/* Hover effect for entry indicator */
+.premium-calendar .react-calendar__tile:hover .entry-indicator {
+  background: hsl(var(--primary) / 0.2);
+  transform: scale(1.1);
+  border-color: hsl(var(--primary) / 0.4);
+}
+
+/* For predicted/fertile days with entries, adjust the indicator */
+.premium-calendar .react-calendar__tile.predicted-day .entry-indicator,
+.premium-calendar .react-calendar__tile.fertile-day .entry-indicator {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: white;
+  backdrop-filter: blur(4px);
+}
+
+/* Small animation on hover */
+.premium-calendar .react-calendar__tile.has-entry:hover .entry-indicator {
+  animation: wiggle 0.5s ease;
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1.1);
+  }
+  25% {
+    transform: rotate(-3deg) scale(1.1);
+  }
+  75% {
+    transform: rotate(3deg) scale(1.1);
+  }
+}
+
 /* Today */
 .premium-calendar .react-calendar__tile.today {
   position: relative;

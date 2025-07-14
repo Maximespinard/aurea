@@ -10,6 +10,7 @@ interface PremiumCalendarProps {
   predictedDays: Date[];
   fertileDays: Date[];
   activeCycleDay?: (date: Date) => number | null;
+  daysWithEntries?: Date[];
 }
 
 export function PremiumCalendar({
@@ -19,6 +20,7 @@ export function PremiumCalendar({
   predictedDays,
   fertileDays,
   activeCycleDay,
+  daysWithEntries = [],
 }: PremiumCalendarProps) {
   const [value, setValue] = useState<Date>(selected || new Date());
 
@@ -46,9 +48,13 @@ export function PremiumCalendar({
   const isSelected = (date: Date) =>
     selected ? isSameDay(date, selected) : false;
 
+  const hasEntry = (date: Date) =>
+    daysWithEntries.some(d => isSameDay(d, date));
+
   const getTileContent = ({ date }: { date: Date }) => {
     const cycleDay = activeCycleDay?.(date);
     const isPeriod = isPeriodDay(date);
+    const hasData = hasEntry(date);
     
     return (
       <>
@@ -57,6 +63,14 @@ export function PremiumCalendar({
         )}
         {isFertileDay(date) && (
           <span className="fertile-icon">✦</span>
+        )}
+        {hasData && !isPeriod && (
+          <span className="entry-indicator" title="Has notes">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3z"/>
+              <path d="M4 4h8v1H4V4zm0 3h8v1H4V7zm0 3h5v1H4v-1z"/>
+            </svg>
+          </span>
         )}
       </>
     );
@@ -80,6 +94,7 @@ export function PremiumCalendar({
     
     if (isToday(date)) classes.push("today");
     if (isSelected(date)) classes.push("selected");
+    if (hasEntry(date)) classes.push("has-entry");
     
     return classes.join(" ");
   };
