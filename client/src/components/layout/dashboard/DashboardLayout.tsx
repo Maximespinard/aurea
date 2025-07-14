@@ -105,13 +105,12 @@ const DashboardLayout = () => {
 
       {/* Main content */}
       <div className="lg:ml-64 min-h-screen">
-        {/* Top header */}
-        <header className="bg-white shadow-sm border-b h-16">
+        {/* Top header - visible only on mobile */}
+        <header className="lg:hidden bg-white shadow-sm border-b h-16">
           <div className="flex items-center justify-between px-6 py-4 h-full">
             <Button
               variant="ghost"
               size="sm"
-              className="lg:hidden"
               onClick={() => setIsSidebarOpen(true)}
             >
               <Menu className="h-5 w-5" />
