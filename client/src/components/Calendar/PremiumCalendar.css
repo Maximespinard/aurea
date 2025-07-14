@@ -72,7 +72,6 @@
 .premium-calendar .react-calendar__month-view__weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
   margin-bottom: 0.75rem;
   padding: 0;
 }
@@ -94,7 +93,6 @@
 .premium-calendar .react-calendar__month-view__days {
   display: grid !important;
   grid-template-columns: repeat(7, 1fr) !important;
-  gap: 6px !important;
   width: 100% !important;
 }
 
@@ -112,6 +110,7 @@
   font-size: 1rem;
   font-weight: 600;
   padding: 0;
+  margin: 3px;
   position: relative;
   transition: all 0.2s ease;
   min-height: 60px;
@@ -291,6 +290,7 @@
   .premium-calendar .react-calendar__tile {
     min-height: 48px;
     font-size: 0.875rem;
+    margin: 2px;
   }
   
   .date-number {
@@ -300,24 +300,17 @@
   .cycle-badge {
     font-size: 0.5rem;
   }
-  
-  .premium-calendar .react-calendar__month-view__days {
-    gap: 4px !important;
-  }
 }
 
 @media (max-width: 480px) {
   .premium-calendar .react-calendar__tile {
     min-height: 44px;
     font-size: 0.8125rem;
+    margin: 1.5px;
   }
   
   .date-number {
     font-size: 0.8125rem;
-  }
-  
-  .premium-calendar .react-calendar__month-view__days {
-    gap: 3px !important;
   }
 }
 
