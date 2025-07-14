@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -20,6 +19,9 @@ import {
 } from '@/components/ui/select';
 import { format } from 'date-fns';
 import { useCreateOrUpdateDayEntry } from '@/hooks/useCycle';
+import { SymptomSelector } from './components/SymptomSelector';
+import { MoodSelector } from './components/MoodSelector';
+import { useDayEntryForm } from './hooks/useDayEntryForm';
 import type { DayEntry } from '@/lib/api/cycle';
 
 interface DayEntryModalProps {
@@ -37,42 +39,25 @@ export function DayEntryModal({
   cycleId,
   existingEntry,
 }: DayEntryModalProps) {
-  const [symptoms, setSymptoms] = useState<string[]>([]);
-  const [mood, setMood] = useState<string>('');
-  const [flow, setFlow] = useState<string>('none');
-  const [temperature, setTemperature] = useState<string>('');
-  const [notes, setNotes] = useState('');
-
   const dayEntryMutation = useCreateOrUpdateDayEntry();
-
-  // Initialize form with existing entry data
-  useEffect(() => {
-    if (existingEntry) {
-      setSymptoms(existingEntry.symptoms || []);
-      setMood(existingEntry.mood || '');
-      setFlow(existingEntry.flow || 'none');
-      setTemperature(existingEntry.temperature?.toString() || '');
-      setNotes(existingEntry.notes || '');
-    } else {
-      // Reset form when no existing entry
-      setSymptoms([]);
-      setMood('');
-      setFlow('none');
-      setTemperature('');
-      setNotes('');
-    }
-  }, [existingEntry, open]);
+  
+  const {
+    symptoms,
+    setSymptoms,
+    mood,
+    setMood,
+    flow,
+    setFlow,
+    temperature,
+    setTemperature,
+    notes,
+    setNotes,
+    getFormData,
+  } = useDayEntryForm(existingEntry, open);
 
   const handleSubmit = () => {
-    const data = {
-      date: date.toISOString(),
-      symptoms: symptoms.length > 0 ? symptoms : undefined,
-      mood: mood as 'happy' | 'sad' | 'anxious' | 'irritable' | 'calm' | 'energetic' | undefined,
-      flow: flow !== 'none' ? (flow as 'light' | 'medium' | 'heavy') : undefined,
-      temperature: temperature ? parseFloat(temperature) : undefined,
-      notes: notes || undefined,
-    };
-
+    const data = getFormData(date);
+    
     dayEntryMutation.mutate(
       { cycleId, data },
       {
@@ -83,35 +68,6 @@ export function DayEntryModal({
     );
   };
 
-  const commonSymptoms = [
-    'Cramps',
-    'Headache',
-    'Backache',
-    'Bloating',
-    'Mood swings',
-    'Fatigue',
-    'Nausea',
-    'Breast tenderness',
-    'Acne',
-    'Cravings',
-  ];
-
-  const moods = [
-    { value: 'happy', label: '😊 Happy' },
-    { value: 'sad', label: '😢 Sad' },
-    { value: 'anxious', label: '😰 Anxious' },
-    { value: 'irritable', label: '😤 Irritable' },
-    { value: 'calm', label: '😌 Calm' },
-    { value: 'energetic', label: '⚡ Energetic' },
-  ];
-
-  const toggleSymptom = (symptom: string) => {
-    setSymptoms((prev) =>
-      prev.includes(symptom)
-        ? prev.filter((s) => s !== symptom)
-        : [...prev, symptom]
-    );
-  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -141,38 +97,9 @@ export function DayEntryModal({
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label>Mood</Label>
-            <Select value={mood} onValueChange={setMood}>
-              <SelectTrigger>
-                <SelectValue placeholder="How are you feeling?" />
-              </SelectTrigger>
-              <SelectContent>
-                {moods.map((m) => (
-                  <SelectItem key={m.value} value={m.value}>
-                    {m.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <MoodSelector mood={mood} onChange={setMood} />
 
-          <div className="space-y-2">
-            <Label>Symptoms</Label>
-            <div className="flex flex-wrap gap-2">
-              {commonSymptoms.map((symptom) => (
-                <Button
-                  key={symptom}
-                  type="button"
-                  variant={symptoms.includes(symptom) ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => toggleSymptom(symptom)}
-                >
-                  {symptom}
-                </Button>
-              ))}
-            </div>
-          </div>
+          <SymptomSelector symptoms={symptoms} onChange={setSymptoms} />
 
           <div className="space-y-2">
             <Label htmlFor="temperature">
