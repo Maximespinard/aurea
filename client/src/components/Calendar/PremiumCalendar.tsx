@@ -51,24 +51,33 @@ export function PremiumCalendar({
     const isPeriod = isPeriodDay(date);
     
     return (
-      <div className="tile-content">
-        <span className="date-number">{format(date, "d")}</span>
+      <>
         {isPeriod && cycleDay && (
           <span className="cycle-badge">D{cycleDay}</span>
         )}
         {isFertileDay(date) && (
           <span className="fertile-icon">✦</span>
         )}
-      </div>
+      </>
     );
   };
 
   const getTileClassName = ({ date }: { date: Date }) => {
-    const classes = ["calendar-tile"];
+    const classes = [];
     
-    if (isPeriodDay(date)) classes.push("period-day");
-    if (isPredictedDay(date)) classes.push("predicted-day");
-    if (isFertileDay(date)) classes.push("fertile-day");
+    // Priority order: period > predicted > fertile
+    const isPeriod = isPeriodDay(date);
+    const isPredicted = isPredictedDay(date);
+    const isFertile = isFertileDay(date);
+    
+    if (isPeriod) {
+      classes.push("period-day");
+    } else if (isPredicted) {
+      classes.push("predicted-day");
+    } else if (isFertile) {
+      classes.push("fertile-day");
+    }
+    
     if (isToday(date)) classes.push("today");
     if (isSelected(date)) classes.push("selected");
     

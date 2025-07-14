@@ -170,15 +170,26 @@ export default function Calendar() {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center gap-3">
-                <div className="w-4 h-4 rounded bg-destructive" />
+                <div className="w-4 h-4 rounded" style={{ backgroundColor: 'var(--cycle-period-color)' }} />
                 <span className="text-sm">Period Days</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-4 h-4 rounded bg-destructive/30 border border-dashed border-destructive" />
+                <div 
+                  className="w-4 h-4 rounded border-2 border-dashed" 
+                  style={{ 
+                    backgroundColor: 'var(--cycle-period-light)', 
+                    borderColor: 'var(--cycle-period-color)' 
+                  }} 
+                />
                 <span className="text-sm">Predicted Period</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-4 h-4 rounded bg-green-600" />
+                <div 
+                  className="w-4 h-4 rounded" 
+                  style={{ 
+                    background: 'linear-gradient(135deg, var(--cycle-fertile-start) 0%, var(--cycle-fertile-end) 100%)' 
+                  }} 
+                />
                 <span className="text-sm">Fertile Window</span>
               </div>
             </CardContent>
@@ -240,19 +251,19 @@ export default function Calendar() {
               <CardContent>
                 <div className="space-y-2">
                   {isDayInPeriod(selectedDate) && (
-                    <Badge className="w-full justify-center" variant="destructive">
+                    <Badge className="w-full justify-center badge-period">
                       <Droplets className="w-3 h-3 mr-1" />
                       Period Day
                     </Badge>
                   )}
                   {isDayPredicted(selectedDate) && (
-                    <Badge className="w-full justify-center" variant="outline">
+                    <Badge className="w-full justify-center badge-predicted">
                       <Droplets className="w-3 h-3 mr-1" />
                       Predicted Period
                     </Badge>
                   )}
                   {isDayFertile(selectedDate) && (
-                    <Badge className="w-full justify-center bg-green-600">
+                    <Badge className="w-full justify-center badge-fertile">
                       <Heart className="w-3 h-3 mr-1" />
                       Fertile Day
                     </Badge>
