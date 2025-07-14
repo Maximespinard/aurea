@@ -1,18 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { EndCycleButton } from "@/features/Cycle/EndCycleButton";
 import type { Cycle } from "@/lib/api/cycle";
 
 interface CalendarHeaderProps {
   activeCycle: Cycle | null;
   getActiveCycleDay: (date: Date) => number | null;
-  onStartPeriod: () => void;
 }
 
 export function CalendarHeader({ 
   activeCycle, 
-  getActiveCycleDay, 
-  onStartPeriod 
+  getActiveCycleDay
 }: CalendarHeaderProps) {
   return (
     <div className="mb-8 p-8 -m-6 rounded-b-2xl">
@@ -26,16 +22,6 @@ export function CalendarHeader({
           </p>
         </div>
         <div className="flex gap-2">
-          {!activeCycle && (
-            <Button
-              onClick={onStartPeriod}
-              className="bg-primary hover:bg-primary/90 shadow-lg"
-              size="lg"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Start Period
-            </Button>
-          )}
           {activeCycle && (
             <EndCycleButton
               cycleStartDate={activeCycle.startDate}

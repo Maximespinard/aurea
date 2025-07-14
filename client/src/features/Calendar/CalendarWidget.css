@@ -439,6 +439,23 @@
   cursor: not-allowed;
 }
 
+/* Future dates - prevent interaction */
+.premium-calendar .react-calendar__tile.future-date {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: #f8f9fa !important;
+  color: #9ca3af !important;
+  border-color: #e5e7eb !important;
+}
+
+.premium-calendar .react-calendar__tile.future-date:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  background: #f8f9fa !important;
+  border-color: #e5e7eb !important;
+}
+
 /* Animations */
 @keyframes shimmer {
   0% {
@@ -498,12 +515,5 @@
   .entry-indicator svg {
     width: 10px;
     height: 10px;
-  }
-}
-
-/* Dark mode support - using darker shades for fertile window */
-@media (prefers-color-scheme: dark) {
-  .premium-calendar .react-calendar__tile.fertile-day {
-    background: linear-gradient(135deg, #047857 0%, #065f46 100%) !important;
   }
 }

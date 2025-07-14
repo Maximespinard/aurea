@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import Calendar from "react-calendar";
-import { format } from "date-fns";
+import { format, isAfter, startOfDay } from "date-fns";
 import { CalendarTileContent } from "./components/CalendarTileContent";
 import { useCalendarDates } from "./hooks/useCalendarDates";
 import { useClickOutside } from "./hooks/useClickOutside";
@@ -60,6 +60,12 @@ export function CalendarWidget({
     }
     
     if (date instanceof Date) {
+      // Prevent selecting future dates
+      const today = startOfDay(new Date());
+      if (isAfter(startOfDay(date), today)) {
+        return;
+      }
+      
       setValue(date);
       onSelect?.(date);
     }
