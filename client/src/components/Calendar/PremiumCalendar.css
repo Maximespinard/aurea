@@ -21,7 +21,7 @@
 /* Only limit width on very large screens */
 @media (min-width: 1536px) {
   .premium-calendar {
-    max-width: 1000px !important;
+    max-width: 800px !important;
     margin: 0 auto;
   }
 }
@@ -89,9 +89,15 @@
   font-size: clamp(1.125rem, 2vw, 1.5rem);
   font-weight: 700;
   color: #1f2937;
-  background: transparent;
-  border: none;
-  cursor: default;
+  background: transparent !important;
+  border: none !important;
+  cursor: default !important;
+  pointer-events: none !important; /* Disable clicking */
+}
+
+.premium-calendar .react-calendar__navigation__label:hover {
+  background: transparent !important;
+  color: #1f2937 !important;
 }
 
 /* Month view */
@@ -336,21 +342,21 @@
   }
 }
 
-/* Selected day - Primary purple color */
+/* Selected day - Blue accent color */
 .premium-calendar .react-calendar__tile.selected {
-  background: #a855f7 !important;
+  background: #3b82f6 !important;
   color: #ffffff !important;
-  border-color: #9333ea !important;
-  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+  border-color: #2563eb !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   transform: scale(1.02);
 }
 
 /* Period days - Higher specificity to override fertile days */
 .premium-calendar .react-calendar__tile.period-day,
 .premium-calendar .react-calendar__tile.period-day.fertile-day {
-  background: var(--cycle-period-color) !important;
+  background: #a855f7 !important;
   color: white !important;
-  border-color: var(--cycle-period-dark) !important;
+  border-color: #9333ea !important;
   position: relative;
   overflow: hidden;
   z-index: 10;
@@ -373,17 +379,17 @@
 }
 
 .premium-calendar .react-calendar__tile.period-day:hover {
-  background: var(--cycle-period-dark) !important;
+  background: #9333ea !important;
   transform: scale(1.05);
-  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
+  box-shadow: 0 6px 16px rgba(168, 85, 247, 0.3);
 }
 
 /* Predicted period */
 .premium-calendar .react-calendar__tile.predicted-day,
 .premium-calendar .react-calendar__tile.predicted-day.fertile-day {
-  background: var(--cycle-period-light) !important;
-  border: 2px dashed var(--cycle-period-color) !important;
-  color: var(--cycle-period-dark) !important;
+  background: rgba(168, 85, 247, 0.1) !important;
+  border: 2px dashed #a855f7 !important;
+  color: #9333ea !important;
   position: relative;
   z-index: 5;
 }
@@ -396,8 +402,8 @@
     -45deg,
     transparent,
     transparent 8px,
-    var(--cycle-period-light-pattern) 8px,
-    var(--cycle-period-light-pattern) 16px
+    rgba(168, 85, 247, 0.08) 8px,
+    rgba(168, 85, 247, 0.08) 16px
   );
   border-radius: inherit;
 }

@@ -144,7 +144,7 @@ export default function Calendar() {
           </div>
           <div className="flex gap-2">
             {!activeCycle && (
-              <Button 
+              <Button
                 onClick={() => setShowStartModal(true)}
                 className="bg-primary hover:bg-primary/90 shadow-lg"
                 size="lg"
@@ -163,9 +163,13 @@ export default function Calendar() {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_320px] px-6">
+      <div
+        className="grid gap-6 lg:grid-cols-[minmax(600px,_700px)_320px] 
+  xl:grid-cols-[minmax(700px,_800px)_360px] px-6"
+      >
+        {' '}
         <Card className="shadow-xl border-primary/10 overflow-hidden">
-          <CardContent className="p-6">
+          <CardContent className="px-6">
             <PremiumCalendar
               selected={selectedDate}
               onSelect={(date) => setSelectedDate(date)}
@@ -177,7 +181,6 @@ export default function Calendar() {
             />
           </CardContent>
         </Card>
-
         <div className="space-y-3">
           <Card className="shadow-lg border-primary/10">
             <CardHeader>
@@ -189,25 +192,29 @@ export default function Calendar() {
             </CardHeader>
             <CardContent className="space-y-4 pt-2">
               <div className="flex items-center gap-3 rounded-lg hover:bg-muted/50 transition-colors">
-                <div className="w-5 h-5 rounded-md shadow-sm" style={{ backgroundColor: 'var(--cycle-period-color)' }} />
+                <div
+                  className="w-5 h-5 rounded-md shadow-sm"
+                  style={{ backgroundColor: '#a855f7' }}
+                />
                 <span className="text-sm font-medium">Period Days</span>
               </div>
               <div className="flex items-center gap-3 rounded-lg hover:bg-muted/50 transition-colors">
-                <div 
-                  className="w-5 h-5 rounded-md border-2 border-dashed shadow-sm" 
-                  style={{ 
-                    backgroundColor: 'var(--cycle-period-light)', 
-                    borderColor: 'var(--cycle-period-color)' 
-                  }} 
+                <div
+                  className="w-5 h-5 rounded-md border-2 border-dashed shadow-sm"
+                  style={{
+                    backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                    borderColor: '#a855f7',
+                  }}
                 />
                 <span className="text-sm font-medium">Predicted Period</span>
               </div>
               <div className="flex items-center gap-3 rounded-lg hover:bg-muted/50 transition-colors">
-                <div 
-                  className="w-5 h-5 rounded-md shadow-sm" 
-                  style={{ 
-                    background: 'linear-gradient(135deg, var(--cycle-fertile-start) 0%, var(--cycle-fertile-end) 100%)' 
-                  }} 
+                <div
+                  className="w-5 h-5 rounded-md shadow-sm"
+                  style={{
+                    background:
+                      'linear-gradient(135deg, var(--cycle-fertile-start) 0%, var(--cycle-fertile-end) 100%)',
+                  }}
                 />
                 <span className="text-sm font-medium">Fertile Window</span>
               </div>
@@ -223,21 +230,37 @@ export default function Calendar() {
             </CardHeader>
             <CardContent className="space-y-4 pt-2">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Cycle Length</span>
+                <span className="text-sm text-muted-foreground">
+                  Cycle Length
+                </span>
                 <span className="font-medium">
-                  {predictions?.averageCycleLength ? `${predictions.averageCycleLength} days` : profile?.cycleLength ? `${profile.cycleLength} days` : '-'}
+                  {predictions?.averageCycleLength
+                    ? `${predictions.averageCycleLength} days`
+                    : profile?.cycleLength
+                    ? `${profile.cycleLength} days`
+                    : '-'}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Period Duration</span>
+                <span className="text-sm text-muted-foreground">
+                  Period Duration
+                </span>
                 <span className="font-medium">
-                  {predictions?.averagePeriodDuration ? `${predictions.averagePeriodDuration} days` : profile?.periodDuration ? `${profile.periodDuration} days` : '-'}
+                  {predictions?.averagePeriodDuration
+                    ? `${predictions.averagePeriodDuration} days`
+                    : profile?.periodDuration
+                    ? `${profile.periodDuration} days`
+                    : '-'}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Next Period</span>
+                <span className="text-sm text-muted-foreground">
+                  Next Period
+                </span>
                 <span className="font-medium">
-                  {nextPeriodPrediction ? format(nextPeriodPrediction, "MMM d") : '-'}
+                  {nextPeriodPrediction
+                    ? format(nextPeriodPrediction, 'MMM d')
+                    : '-'}
                 </span>
               </div>
               {activeCycle && (
@@ -254,7 +277,9 @@ export default function Calendar() {
           {selectedDate && (
             <Card className="shadow-lg border-primary/10">
               <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-lg">{format(selectedDate, "MMMM d, yyyy")}</CardTitle>
+                <CardTitle className="text-lg">
+                  {format(selectedDate, 'MMMM d, yyyy')}
+                </CardTitle>
                 {cycles.length > 0 && (
                   <Button
                     size="sm"
@@ -288,7 +313,7 @@ export default function Calendar() {
                     </Badge>
                   )}
                 </div>
-                
+
                 {(() => {
                   const dayEntry = getDayEntry(selectedDate);
                   return (
@@ -297,7 +322,9 @@ export default function Calendar() {
                         <div className="mt-4 space-y-3">
                           {dayEntry.symptoms.length > 0 && (
                             <div>
-                              <p className="text-sm font-medium mb-2">Symptoms</p>
+                              <p className="text-sm font-medium mb-2">
+                                Symptoms
+                              </p>
                               <div className="flex flex-wrap gap-2">
                                 {dayEntry.symptoms.map((symptom, idx) => (
                                   <Badge key={idx} variant="secondary">
@@ -311,7 +338,9 @@ export default function Calendar() {
                           {dayEntry.mood && (
                             <div>
                               <p className="text-sm font-medium mb-1">Mood</p>
-                              <p className="text-sm capitalize">{dayEntry.mood}</p>
+                              <p className="text-sm capitalize">
+                                {dayEntry.mood}
+                              </p>
                             </div>
                           )}
                           {dayEntry.notes && (
@@ -336,10 +365,7 @@ export default function Calendar() {
         </div>
       </div>
 
-      <StartCycleModal 
-        open={showStartModal} 
-        onOpenChange={setShowStartModal} 
-      />
+      <StartCycleModal open={showStartModal} onOpenChange={setShowStartModal} />
 
       {selectedDate && cycles.length > 0 && (
         <DayEntryModal
@@ -350,7 +376,9 @@ export default function Calendar() {
             // Find the cycle that contains this date
             for (const cycle of cycles) {
               const startDate = new Date(cycle.startDate);
-              const endDate = cycle.endDate ? new Date(cycle.endDate) : new Date();
+              const endDate = cycle.endDate
+                ? new Date(cycle.endDate)
+                : new Date();
               if (selectedDate >= startDate && selectedDate <= endDate) {
                 return cycle.id;
               }

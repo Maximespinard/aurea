@@ -63,21 +63,18 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-[calc(100vh-4rem)]">
-      {/* Welcome Header with Gradient Background */}
-      <div className="relative mb-12 -mt-6 -mx-6 px-6 pt-12 pb-16 bg-gradient-to-br rounded-b-3xl">
-        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:30px_30px]" />
-        <div className="relative">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-            Welcome back, {user?.username}!
-          </h1>
-          <p className="text-muted-foreground mt-3 text-lg">
-            Here's your cycle overview and insights.
-          </p>
-        </div>
+      {/* Welcome Header */}
+      <div className="mb-8 p-8 -m-6 rounded-b-2xl">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+          Welcome back, {user?.username}!
+        </h1>
+        <p className="text-muted-foreground mt-3 text-lg">
+          Here's your cycle overview and insights.
+        </p>
       </div>
 
       {/* Stats Grid with Animation */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 px-6">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
@@ -108,7 +105,7 @@ const Dashboard = () => {
 
       {/* Cycle Progress Indicator */}
       {profile && (
-        <div className="mb-10 bg-gradient-to-br from-primary/5 to-pink-50 rounded-2xl p-8 border border-primary/10">
+        <div className="mb-10 mx-6 bg-gradient-to-br from-primary/5 to-pink-50 rounded-2xl p-8 border border-primary/10">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
               <Heart className="h-5 w-5 text-primary" />
@@ -135,7 +132,7 @@ const Dashboard = () => {
       )}
 
       {/* Quick Actions with Enhanced Design */}
-      <div className="bg-gradient-to-br from-white to-primary/5 rounded-2xl shadow-lg border border-primary/10 p-8 mb-8">
+      <div className="bg-gradient-to-br from-white to-primary/5 rounded-2xl shadow-lg border border-primary/10 p-8 mb-8 mx-6">
         <h2 className="text-xl font-bold text-foreground mb-6">
           Quick Actions
         </h2>

@@ -137,6 +137,11 @@ export function PremiumCalendar({
         formatShortWeekday={(_locale, date) => 
           format(date, "EEE").slice(0, 2).toUpperCase()
         }
+        onClickMonth={() => {}} // Disable month selection
+        onClickYear={() => {}} // Disable year selection
+        onClickDecade={() => {}} // Disable decade selection
+        view="month" // Force month view
+        maxDetail="month" // Prevent drilling down to year/decade view
       />
     </div>
   );

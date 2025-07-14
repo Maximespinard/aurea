@@ -12,14 +12,16 @@ export default function Profile() {
 
   return (
     <div className="min-h-[calc(100vh-4rem)]">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Profile Settings</h1>
-        <p className="text-muted-foreground mt-2">
+      <div className="mb-8 p-8 -m-6 rounded-b-2xl">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+          Profile Settings
+        </h1>
+        <p className="text-muted-foreground mt-3 text-lg">
           Manage your personal information and cycle tracking preferences
         </p>
       </div>
 
-      <div className="grid lg:grid-cols-[1fr_320px] gap-8">
+      <div className="grid lg:grid-cols-[1fr_320px] gap-8 px-6">
         {/* Main Content - Form on the left */}
         <div>
           <Card className="shadow-lg border-primary/10">
