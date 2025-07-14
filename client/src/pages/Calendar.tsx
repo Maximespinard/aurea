@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import { useCycleStore } from "@/stores/cycleStore";
 import { StartCycleModal } from "@/features/Cycle/StartCycleModal";
 import { EndCycleButton } from "@/features/Cycle/EndCycleButton";
 import { DayEntryModal } from "@/features/Cycle/DayEntryModal";
+import { PremiumCalendar } from "@/components/Calendar/PremiumCalendar";
 import type { DayEntry } from "@/lib/api/cycle";
 
 export default function Calendar() {
@@ -107,6 +107,19 @@ export default function Calendar() {
     return null;
   };
 
+  // Get all days with entries (symptoms, mood, or notes)
+  const daysWithEntries = useMemo(() => {
+    const days: Date[] = [];
+    cycles.forEach((cycle) => {
+      cycle.dayEntries.forEach((entry) => {
+        if (entry.symptoms.length > 0 || entry.mood || entry.notes) {
+          days.push(new Date(entry.date));
+        }
+      });
+    });
+    return days;
+  }, [cycles]);
+
   if (isLoading) {
     return (
       <div className="container max-w-6xl py-8">
@@ -150,35 +163,15 @@ export default function Calendar() {
               Calendar View
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <CalendarComponent
-              mode="single"
-              selected={selectedDate || undefined}
-              onSelect={(date) => setSelectedDate(date || null)}
-              className="rounded-md border"
-              modifiers={{
-                period: (day) => isDayInPeriod(day),
-                predicted: (day) => isDayPredicted(day),
-                fertile: (day) => isDayFertile(day),
-              }}
-              modifiersStyles={{
-                period: {
-                  backgroundColor: "hsl(var(--destructive))",
-                  color: "hsl(var(--destructive-foreground))",
-                  borderRadius: "0.375rem",
-                },
-                predicted: {
-                  backgroundColor: "hsl(var(--destructive) / 0.3)",
-                  color: "hsl(var(--destructive-foreground))",
-                  borderRadius: "0.375rem",
-                  border: "1px dashed hsl(var(--destructive))",
-                },
-                fertile: {
-                  backgroundColor: "hsl(142, 76%, 36%)",
-                  color: "white",
-                  borderRadius: "0.375rem",
-                },
-              }}
+          <CardContent className="p-6">
+            <PremiumCalendar
+              selected={selectedDate}
+              onSelect={(date) => setSelectedDate(date)}
+              periodDays={periodDays}
+              predictedDays={nextPeriodDays}
+              fertileDays={fertileDays}
+              activeCycleDay={(date) => getActiveCycleDay(date)}
+              daysWithEntries={daysWithEntries}
             />
           </CardContent>
         </Card>
@@ -191,15 +184,26 @@ export default function Calendar() {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center gap-3">
-                <div className="w-4 h-4 rounded bg-destructive" />
+                <div className="w-4 h-4 rounded" style={{ backgroundColor: 'var(--cycle-period-color)' }} />
                 <span className="text-sm">Period Days</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-4 h-4 rounded bg-destructive/30 border border-dashed border-destructive" />
+                <div 
+                  className="w-4 h-4 rounded border-2 border-dashed" 
+                  style={{ 
+                    backgroundColor: 'var(--cycle-period-light)', 
+                    borderColor: 'var(--cycle-period-color)' 
+                  }} 
+                />
                 <span className="text-sm">Predicted Period</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-4 h-4 rounded bg-green-600" />
+                <div 
+                  className="w-4 h-4 rounded" 
+                  style={{ 
+                    background: 'linear-gradient(135deg, var(--cycle-fertile-start) 0%, var(--cycle-fertile-end) 100%)' 
+                  }} 
+                />
                 <span className="text-sm">Fertile Window</span>
               </div>
             </CardContent>
@@ -261,19 +265,19 @@ export default function Calendar() {
               <CardContent>
                 <div className="space-y-2">
                   {isDayInPeriod(selectedDate) && (
-                    <Badge className="w-full justify-center" variant="destructive">
+                    <Badge className="w-full justify-center badge-period">
                       <Droplets className="w-3 h-3 mr-1" />
                       Period Day
                     </Badge>
                   )}
                   {isDayPredicted(selectedDate) && (
-                    <Badge className="w-full justify-center" variant="outline">
+                    <Badge className="w-full justify-center badge-predicted">
                       <Droplets className="w-3 h-3 mr-1" />
                       Predicted Period
                     </Badge>
                   )}
                   {isDayFertile(selectedDate) && (
-                    <Badge className="w-full justify-center bg-green-600">
+                    <Badge className="w-full justify-center badge-fertile">
                       <Heart className="w-3 h-3 mr-1" />
                       Fertile Day
                     </Badge>
