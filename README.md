@@ -30,6 +30,7 @@ Built with a fast and scalable fullstack architecture, Auréa combines a refined
 - **Class Validator** - DTO validation
 - **Helmet** - Security middleware
 - **Rate Limiting** - API protection
+- **Swagger** - Interactive API documentation
 
 ### Development Tools
 - **ESLint** - Code linting and formatting
@@ -124,6 +125,30 @@ aurea/
 - **Secure API** - Rate limiting, validation, and security headers
 - **Data Encryption** - Passwords hashed, JWT tokens for secure communication
 
+## 📸 Screenshots
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="./screenshots/dashboard-view.jpeg" alt="Dashboard" width="400"/>
+        <br />
+        <sub><b>Dashboard Overview</b></sub>
+      </td>
+      <td align="center">
+        <img src="./screenshots/calendar-view.jpeg" alt="Calendar" width="400"/>
+        <br />
+        <sub><b>Interactive Calendar</b></sub>
+      </td>
+      <td align="center">
+        <img src="./screenshots/settings-view.jpeg" alt="Profile Settings" width="400"/>
+        <br />
+        <sub><b>Profile Settings</b></sub>
+      </td>
+    </tr>
+  </table>
+</div>
+
 ## 🛠️ Development
 
 ### Prerequisites
@@ -173,6 +198,8 @@ aurea/
    # Backend (http://localhost:3000)
    cd server
    npm run start:dev
+   
+   # API Documentation available at http://localhost:3000/api
    ```
 
 ### Available Scripts
@@ -202,6 +229,21 @@ Auréa follows modern fullstack development patterns:
 - **Responsive Design** - Mobile-first approach with Tailwind CSS
 - **API-first Backend** - RESTful APIs with NestJS and automatic validation
 - **Database-first** - Prisma schema drives the data layer
+
+## 📚 API Documentation
+
+Auréa provides comprehensive API documentation through Swagger/OpenAPI:
+
+- **Interactive Documentation**: Available at `http://localhost:3000/api` when the backend is running
+- **API Testing**: Test endpoints directly from the browser
+- **Authentication**: JWT Bearer token authentication integrated
+- **Request/Response Examples**: Detailed schemas and examples for all endpoints
+
+<div align="center">
+  <img src="./screenshots/swagger.jpeg" alt="Swagger API Documentation" width="800"/>
+  <br />
+  <sub><b>Interactive API Documentation with Swagger</b></sub>
+</div>
 
 ## 🔐 Security
 
