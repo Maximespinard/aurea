@@ -14,7 +14,7 @@ async function bootstrap() {
         directives: {
           defaultSrc: ["'self'"],
           styleSrc: ["'self'", "'unsafe-inline'"],
-          scriptSrc: ["'self'", "'unsafe-inline'"], // Allow inline scripts for Swagger UI
+          scriptSrc: ["'self'", "'unsafe-inline'"],
           imgSrc: ["'self'", 'data:', 'https:'],
         },
       },
@@ -26,7 +26,7 @@ async function bootstrap() {
   const isProduction = process.env.NODE_ENV === 'production';
   app.enableCors({
     origin: isProduction
-      ? ['https://yourdomain.com'] // Replace with your production domain
+      ? ['https://aurea-lemon.vercel.app/']
       : ['http://localhost:5173', 'http://localhost:3000'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
