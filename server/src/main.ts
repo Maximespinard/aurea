@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 
@@ -13,7 +14,7 @@ async function bootstrap() {
         directives: {
           defaultSrc: ["'self'"],
           styleSrc: ["'self'", "'unsafe-inline'"],
-          scriptSrc: ["'self'"],
+          scriptSrc: ["'self'", "'unsafe-inline'"], // Allow inline scripts for Swagger UI
           imgSrc: ["'self'", 'data:', 'https:'],
         },
       },
@@ -46,6 +47,30 @@ async function bootstrap() {
     }),
   );
 
+  // Swagger configuration
+  if (!isProduction) {
+    const config = new DocumentBuilder()
+      .setTitle('Aurea API')
+      .setDescription('API documentation for Aurea - Menstrual Cycle Tracker')
+      .setVersion('1.0')
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+        'JWT-auth',
+      )
+      .build();
+
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api', app, document);
+  }
+
   await app.listen(process.env.PORT ?? 3000);
+  console.log(`Application is running on: http://localhost:${process.env.PORT ?? 3000}`);
+  if (!isProduction) {
+    console.log(`Swagger documentation available at: http://localhost:${process.env.PORT ?? 3000}/api`);
+  }
 }
 void bootstrap();
