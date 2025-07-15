@@ -176,10 +176,22 @@ aurea/
    ```
 
 3. **Set up environment variables**
+   
+   Backend configuration:
    ```bash
    # In server/.env
    DATABASE_URL="postgresql://user:password@localhost:5432/aurea"
    JWT_SECRET="your-secret-key"
+   JWT_EXPIRATION="7d"  # Token expiration time (e.g., 1h, 24h, 7d, 30d)
+   ```
+   
+   Frontend configuration:
+   ```bash
+   # In client/.env
+   VITE_API_URL=http://localhost:3000
+   
+   # For production deployment:
+   # VITE_API_URL=https://aurea-production.up.railway.app
    ```
 
 4. **Run database migrations**
