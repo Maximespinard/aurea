@@ -131,17 +131,17 @@ aurea/
   <table>
     <tr>
       <td align="center">
-        <img src="./screenshots/dashboard-view.jpeg" alt="Dashboard" width="400"/>
+        <img src="https://i.imgur.com/CiRZvNL.jpeg" alt="Dashboard" width="400"/>
         <br />
         <sub><b>Dashboard Overview</b></sub>
       </td>
       <td align="center">
-        <img src="./screenshots/calendar-view.jpeg" alt="Calendar" width="400"/>
+        <img src="https://i.imgur.com/zQethFc.jpeg" alt="Calendar" width="400"/>
         <br />
         <sub><b>Interactive Calendar</b></sub>
       </td>
       <td align="center">
-        <img src="./screenshots/settings-view.jpeg" alt="Profile Settings" width="400"/>
+        <img src="https://i.imgur.com/YdStaaZ_d.webp?maxwidth=760&fidelity=grand" alt="Profile Settings" width="400"/>
         <br />
         <sub><b>Profile Settings</b></sub>
       </td>
@@ -240,7 +240,7 @@ Auréa provides comprehensive API documentation through Swagger/OpenAPI:
 - **Request/Response Examples**: Detailed schemas and examples for all endpoints
 
 <div align="center">
-  <img src="./screenshots/swagger.jpeg" alt="Swagger API Documentation" width="800"/>
+  <img src="https://i.imgur.com/vLstLH4_d.webp?maxwidth=760&fidelity=grand" alt="Swagger API Documentation" width="800"/>
   <br />
   <sub><b>Interactive API Documentation with Swagger</b></sub>
 </div>
