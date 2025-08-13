@@ -227,7 +227,6 @@ aurea/
 - `npm run build` - Build for production
 - `npm run start:prod` - Run production build
 - `npm run lint` - Run ESLint with auto-fix
-- `npm run test` - Run tests
 - `npx prisma studio` - Open database GUI
 
 ## 🏗️ Architecture
